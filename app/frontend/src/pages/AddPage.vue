@@ -1,5 +1,7 @@
 <script setup>
 import { ref, defineEmits } from 'vue';
+import PageHeader from '../components/PageHeader.vue';
+
 const emit = defineEmits(['addTransaction'])
 
 const description = ref('');
@@ -22,7 +24,7 @@ const addTransaction = () => {
 
 <template>
     <div class="w-full h-full">
-      <h1 class="pt-5 pb-5  w-full text-center text-text text-2xl font-bold">Add Transaction</h1>
+      <PageHeader pageHeading="Add Transaction" />
       <input type="text" placeholder="Description" v-model="description" />
       <input type="number" placeholder="User" v-model="user_id" />
       <input type="number" placeholder="Amount" v-model="amount" />

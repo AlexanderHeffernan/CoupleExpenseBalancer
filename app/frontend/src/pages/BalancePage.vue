@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import PageHeader from '../components/PageHeader.vue';
 
 defineProps(['balanceData']);
 defineEmits(['balanceConfirmed'])
@@ -8,7 +9,7 @@ defineEmits(['balanceConfirmed'])
 
 <template>
     <div class="w-full h-full">
-        <h1 class="pt-5 pb-5  w-full text-center text-text text-2xl font-bold">Balance</h1>
+        <PageHeader pageHeading="Balance" />
         <p>User {{ balanceData.user_id }} owes: {{ balanceData.amount }}</p>
         <button @click="$emit('balanceConfirmed')">Confirm</button>
     </div>
