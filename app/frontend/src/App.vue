@@ -10,14 +10,17 @@ function changePage(page) {
     currentPage.value = page;
 }
 
+const u1expense = ref(100);
+const u2expense = ref(200);
+
 </script>
 
 <template>
     <!-- App container -->
-    <div class="w-screen, h-screen bg-red-500">
+    <div class="w-screen h-screen bg-red-500">
         <!-- Current page view-->
-        <div class="w-full, h-[calc(100%-64px)] bg-green-500">
-            <HomePage v-if="currentPage == 'home'" />
+        <div class="w-full h-[calc(100%-64px)] bg-green-500">
+            <HomePage v-if="currentPage == 'home'" :u1expense="u1expense" :u2expense="u2expense" />
             <AddPage v-if="currentPage == 'add'" />
             <BalancePage v-if="currentPage == 'balance'" />
         </div>

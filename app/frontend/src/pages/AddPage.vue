@@ -7,3 +7,4 @@
       <p>Add page</p>
     </div>
 </template>
+
