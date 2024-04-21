@@ -22,7 +22,7 @@ const addTransaction = () => {
 
 <template>
     <div class="w-full h-full">
-      <p>Add page</p>
+      <h1 class="pt-5 pb-5  w-full text-center text-text text-2xl font-bold">Add Transaction</h1>
       <input type="text" placeholder="Description" v-model="description" />
       <input type="number" placeholder="User" v-model="user_id" />
       <input type="number" placeholder="Amount" v-model="amount" />
