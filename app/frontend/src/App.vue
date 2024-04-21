@@ -5,16 +5,16 @@ import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
 import { transactions, getUserDeficit, getBalance, handleAddTransaction, handleBalanceConfirmed } from './utils/transactions.js';
 
+// Handle page navigation
 let currentPage = ref('home');
+function changePage(page) { currentPage.value = page; }
 
-function changePage(page) {
-    currentPage.value = page;
-}
-
+// Load transactions from local storage
 onMounted(() => {
     transactions.value = JSON.parse(localStorage.getItem('transactions')) || [];
 });
 
+// Save transactions to local storage
 watch(transactions, newVal => {
     localStorage.setItem('transactions', JSON.stringify(newVal));
 }, { deep: true });
@@ -26,7 +26,7 @@ watch(transactions, newVal => {
     <div class="w-screen h-screen bg-red-500">
         <!-- Current page view-->
         <div class="w-full h-[calc(100%-64px)] bg-green-500">
-            <HomePage v-if="currentPage == 'home'" :u1expense="getUserDeficit(1)" :u2expense="getUserDeficit(2)" />
+            <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" />
             <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalance()" @balanceConfirmed="handleBalanceConfirmed" />
         </div>

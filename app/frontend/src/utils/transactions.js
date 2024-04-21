@@ -55,4 +55,5 @@ export function handleBalanceConfirmed() {
     // Add two transactions to balance the situation
     handleAddTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
     handleAddTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
+    transactions.value = [];
 }

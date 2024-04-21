@@ -1,15 +1,18 @@
 <script setup>
 import { defineProps } from 'vue';
 
-const props = defineProps(['u1expense', 'u2expense']);
+const props = defineProps(['u1deficit', 'u2deficit']);
 
-function getAngle(user) {
-  const totalExpense = props.u1expense + props.u2expense;
-
-  // If both expenses are zero, return 0 degrees
-  if (totalExpense === 0) { return 0; }
-  
-  return user === 1 ? props.u1expense / totalExpense * 360 : props.u2expense / totalExpense * 360;
+/**
+ * Calculate the angle of the conic gradient based on the user deficits
+ * @param {number} user_id
+ */
+function getAngle(user_id) {
+  const totalDeficit = props.u1deficit + props.u2deficit;
+  // If both expenses are zero, return 180 degrees (perfect split)
+  return totalDeficit === 0 ? 180 : user_id === 1
+      ? (props.u1deficit / totalDeficit) * 360
+      : (props.u2deficit / totalDeficit) * 360;
 }
 
 </script>
@@ -18,8 +21,8 @@ function getAngle(user) {
     <div class="w-full h-full flex flex-col items-center">
       <p>Hello</p>
       <div class="w-64 h-64 rounded-full flex justify-center items-center" :style="{ backgroundImage: `conic-gradient(red ${getAngle(1)}deg, blue 0deg)` }">
-        <p class="w-1/2 text-center">{{ u2expense }}</p>
-        <p class="w-1/2 text-center">{{ u1expense }}</p>
+        <p class="w-1/2 text-center">${{ u2deficit }}</p>
+        <p class="w-1/2 text-center">${{ u1deficit }}</p>
       </div>
     </div>
 </template>
