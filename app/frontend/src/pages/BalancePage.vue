@@ -8,7 +8,7 @@ defineEmits(['balanceConfirmed'])
 
 <template>
     <div class="w-full h-full">
-        <p>User {{ balanceData.user }} owes: {{ balanceData.amount }}</p>
+        <p>User {{ balanceData.user_id }} owes: {{ balanceData.amount }}</p>
         <button @click="$emit('balanceConfirmed')">Confirm</button>
     </div>
 </template>

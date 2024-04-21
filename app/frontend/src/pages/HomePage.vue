@@ -17,8 +17,9 @@ function getAngle(user) {
 <template>
     <div class="w-full h-full flex flex-col items-center">
       <p>Hello</p>
-      <div class="w-64 h-64 rounded-full" :style="{ backgroundImage: `conic-gradient(red ${getAngle(1)}deg, blue 0deg)` }">
-
+      <div class="w-64 h-64 rounded-full flex justify-center items-center" :style="{ backgroundImage: `conic-gradient(red ${getAngle(1)}deg, blue 0deg)` }">
+        <p class="w-1/2 text-center">{{ u2expense }}</p>
+        <p class="w-1/2 text-center">{{ u1expense }}</p>
       </div>
     </div>
 </template>
