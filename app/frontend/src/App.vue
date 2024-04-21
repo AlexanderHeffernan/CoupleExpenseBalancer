@@ -21,18 +21,20 @@ function getUserExpenses(user) {
 function getBalance() {
     const u1expenses = getUserExpenses(1), u2expenses = getUserExpenses(2);
     const difference = Math.abs(u1expenses - u2expenses);
-    if (u1expenses > u2expenses) {
-        return { user: 1, amount: difference };
-    } else if (u2expenses > u1expenses) {
-        return { user: 2, amount: difference };
-    } else {
-        return { user: 0, amount: 0 };
-    }
+    if (u1expenses === u2expenses) { return { user: 0, amount: 0 }; }
+    return { user: u1expenses > u2expenses ? 1 : 2, amount: difference/2 };
 }
 
 function handleAddExpense(expenseData) {
     expenses.value.push({ id: expenses.value.length + 1, description: expenseData.description, user: expenseData.user, amount: expenseData.amount, balance: false});
     localStorage.setItem('expenses', JSON.stringify(expenses.value));
+}
+
+function handleBalanceConfirmed() {
+    const user = getBalance().user;
+    const amount = getBalance().amount;
+    handleAddExpense({ description: 'Balance', user: user, amount: amount });
+    handleAddExpense({ description: 'Balance', user: user == 1 ? 2 : 1, amount: -amount });
 }
 
 
@@ -53,7 +55,7 @@ watch(expenses, newVal => {
         <div class="w-full h-[calc(100%-64px)] bg-green-500">
             <HomePage v-if="currentPage == 'home'" :u1expense="getUserExpenses(1)" :u2expense="getUserExpenses(2)" />
             <AddPage v-if="currentPage == 'add'" @addExpense="handleAddExpense" />
-            <BalancePage v-if="currentPage == 'balance'" @balanceData="getBalance()" />
+            <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalance()" @balanceConfirmed="handleBalanceConfirmed" />
         </div>
         <!-- Navbar -->
         <div class="fixed bottom-0 left-0 w-full h-16 bg-white">
