@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue' //onMounted, watch
+import { ref, onMounted } from 'vue' //onMounted, watch
 import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
@@ -10,9 +10,19 @@ function changePage(page) {
     currentPage.value = page;
 }
 
-const u1expense = ref(100);
-const u2expense = ref(200);
+const expenses = ref([]);
 
+function getUserExpenses(user) {
+    return expenses.value.reduce((total, expense) => {
+        return expense.user === user ? total + expense.amount : total;
+    }, 0);
+}
+
+
+onMounted(() => {
+    expenses.value = JSON.parse(localStorage.getItem('expenses')) || [];
+    expenses.value.push({ id: expenses.value.length + 1, description: 'Test', user: 1, amount: 100, balance: false });
+});
 </script>
 
 <template>
@@ -20,7 +30,7 @@ const u2expense = ref(200);
     <div class="w-screen h-screen bg-red-500">
         <!-- Current page view-->
         <div class="w-full h-[calc(100%-64px)] bg-green-500">
-            <HomePage v-if="currentPage == 'home'" :u1expense="u1expense" :u2expense="u2expense" />
+            <HomePage v-if="currentPage == 'home'" :u1expense="getUserExpenses(1)" :u2expense="getUserExpenses(2)" />
             <AddPage v-if="currentPage == 'add'" />
             <BalancePage v-if="currentPage == 'balance'" />
         </div>
