@@ -72,27 +72,27 @@ function isBalanced() {
     <PageHeader pageHeading="Balance" />
     <div v-if="!isBalanced()" class="w-full h-[calc(100%-90px)] flex flex-col justify-center items-center">
         <div :class="getWidgetColor() + ` flex flex-col items-center shadow-xl p-5 rounded-2xl w-[80%]`">
-            <p class="font-bold text-xl mb-5">Summary</p>
+            <h2 class="mr-auto text-text text-2xl font-bold mb-3">Summary:</h2>
             <div class="bg-white w-full rounded-xl p-5 mb-5">
                 <p class="font-bold">Spending</p>
                 <div class="flex">
-                    <span>User 1 spent:</span><span class="ml-auto">{{ convertAmount(balanceData.u1deficit) }}</span>
+                    <span>User 1 spent -</span><span class="ml-auto">{{ convertAmount(balanceData.u1deficit) }}</span>
                 </div>
                 <div class="flex">
-                    <span>User 2 spent:</span><span class="ml-auto">{{ convertAmount(balanceData.u2deficit) }}</span>
+                    <span>User 2 spent -</span><span class="ml-auto">{{ convertAmount(balanceData.u2deficit) }}</span>
                 </div>
                 <div class="flex">
-                    <span>Total spent:</span><span class="ml-auto">{{ convertAmount(balanceData.u1deficit + balanceData.u2deficit) }}</span>
+                    <span>Total spent -</span><span class="ml-auto">{{ convertAmount(balanceData.u1deficit + balanceData.u2deficit) }}</span>
                 </div>
             </div>
             <div class="bg-white w-full rounded-xl p-5 mb-5">
                 <p class="font-bold">To Balance</p>
                 <div v-if="stage === 0">
                     <div v-if="balanceData.user_id === 1" class="flex">
-                        <span>User 1 to pay:</span><span class="ml-auto">{{ convertAmount(balanceData.amount) }}</span>
+                        <span>User 1 to pay -</span><span class="ml-auto">{{ convertAmount(balanceData.amount) }}</span>
                     </div>
                     <div v-else class="flex">
-                        <span>User 2 to pay:</span><span class="ml-auto">{{ convertAmount(balanceData.amount) }}</span>
+                        <span>User 2 to pay -</span><span class="ml-auto">{{ convertAmount(balanceData.amount) }}</span>
                     </div>
                 </div>
                 <div v-else>
