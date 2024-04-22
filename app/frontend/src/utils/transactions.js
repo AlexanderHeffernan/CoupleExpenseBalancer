@@ -39,7 +39,7 @@ export function getBalance() {
  * Add a new transaction to the list of transactions.
  * @param {Object} transactionData - Data of the transaction to be added
  */
-export function handleAddTransaction(transactionData) {
+export function addTransaction(transactionData) {
     // Push the transaction with a unique id
     transactions.value.push({ id: transactions.value.length + 1, ...transactionData});
     // Store the transactions in the local storage
@@ -53,7 +53,7 @@ export function handleBalanceConfirmed() {
     const user_id = getBalance().user_id;
     const amount = getBalance().amount;
     // Add two transactions to balance the situation
-    handleAddTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
-    handleAddTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
+    addTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
+    addTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
     transactions.value = [];
 }
