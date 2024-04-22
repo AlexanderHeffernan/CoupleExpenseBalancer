@@ -49,7 +49,7 @@ export function addTransaction(transactionData) {
 /**
  * Handle the balance confirmation by adding two transactions to balance the situation.
  */
-export function handleBalanceConfirmed() {
+export function balanceConfirmed() {
     const user_id = getBalanceData().user_id;
     const amount = getBalanceData().amount;
     // Add two transactions to balance the situation

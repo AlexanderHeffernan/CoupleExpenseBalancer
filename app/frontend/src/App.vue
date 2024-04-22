@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
-import { transactions, getUserDeficit, getBalanceData, addTransaction, handleBalanceConfirmed } from './utils/transactions.js';
+import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed } from './utils/transactions.js';
 
 // Handle page navigation
 let currentPage = ref('home');
@@ -13,6 +13,11 @@ function changePage(page) { currentPage.value = page; }
 function handleAddTransaction(transactionData) {
     changePage('home');
     addTransaction(transactionData);
+}
+
+function handleBalanceConfirmed() {
+    changePage('home');
+    balanceConfirmed();
 }
 
 // Load transactions from local storage
