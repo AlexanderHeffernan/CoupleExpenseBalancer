@@ -1,4 +1,6 @@
 import { ref } from 'vue';
+import db from '../firebase/init.js';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
 // Define a reactive reference to store the transactions
 export const transactions = ref([]);
@@ -44,6 +46,7 @@ export function addTransaction(transactionData) {
     transactions.value.push({ id: transactions.value.length + 1, date: new Date(), ...transactionData});
     // Store the transactions in the local storage
     localStorage.setItem('transactions', JSON.stringify(transactions.value));
+    saveTransaction(transactions.value[transactions.value.length - 1]);
 }
 
 /**
@@ -56,4 +59,33 @@ export function balanceConfirmed() {
     addTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
     addTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
     transactions.value = [];
+    localStorage.setItem('transactions', JSON.stringify(transactions.value));
+}
+
+async function saveTransaction(transaction) {
+    // 'transaction' collection reference
+    const colRef = collection(db, 'transactions');
+    // data to send
+    const transactionObj = {
+        id: transaction.id,
+        date: transaction.date,
+        description: transaction.description,
+        user_id: transaction.user_id,
+        expense: transaction.expense,
+        amount: transaction.amount,
+        balance: transaction.balance
+    }
+
+    // create document and return reference to it
+    const docRef = await addDoc(colRef, transactionObj);
+
+    // access auto-generated ID with '.id'
+    console.log('Document was created with ID: ', docRef.id);
+}
+
+export async function getTransactions() {
+    // Get all documents from the 'transactions' collection
+    const querySnapshot = await getDocs(collection(db, 'transactions'));
+    // Map each document to its data and assign it to the transactions ref
+    transactions.value = querySnapshot.docs.map(doc => doc.data());
 }

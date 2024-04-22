@@ -1,9 +1,10 @@
 <script setup>
+
 import { ref, onMounted } from 'vue'
 import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
-import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed } from './utils/transactions.js';
+import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed, getTransactions } from './utils/transactions.js';
 
 // Handle page navigation
 let currentPage = ref('home');
@@ -20,9 +21,9 @@ function handleBalanceConfirmed() {
     balanceConfirmed();
 }
 
-// Load transactions from local storage
-onMounted(() => {
-    transactions.value = JSON.parse(localStorage.getItem('transactions'));
+// Load transactions from server
+onMounted(async() => {
+    await getTransactions();
 });
 
 </script>
