@@ -8,6 +8,7 @@ module.exports = {
         secondary: '#A9A9A9',
         accent: '#FFCCCC',
         background: '#FFFFFF',
+        widget: '#EEE9E6',
         text: '#333333',
         border: '#B0C4DE',
         hover: '#FFD1D1',

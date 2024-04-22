@@ -24,10 +24,10 @@ watch(transactions, newVal => {
 
 <template>
     <!-- App container -->
-    <div class="w-screen h-screen bg-background">
+    <div class="w-screen h-screen bg-background overflow-y-hidden">
         <!-- Current page view-->
-        <div class="w-full h-[calc(100%-64px)]">
-            <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" />
+        <div class="w-full h-[calc(100%-64px)] overflow-y-auto">
+            <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" :transactions="transactions" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" />
             <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalance()" @balanceConfirmed="handleBalanceConfirmed" />
         </div>
@@ -50,6 +50,7 @@ watch(transactions, newVal => {
 </template>
 
 <style>
+
 .navbar {
     justify-content: center;
     gap: 50px;
