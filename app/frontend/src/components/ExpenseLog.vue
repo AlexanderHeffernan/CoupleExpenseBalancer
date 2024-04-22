@@ -4,6 +4,7 @@ import { defineProps } from 'vue';
 defineProps(['transactions']);
 
 function convertDate(date) {
+    if (!(date instanceof Date)) { date = new Date(date); }
     if (!date) { return ' '; }
     return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
 }

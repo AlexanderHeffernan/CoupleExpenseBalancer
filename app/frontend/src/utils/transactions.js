@@ -25,14 +25,14 @@ export function getUserDeficit(user_id) {
  *                       the user_id of the user who has to pay; and
  *                       the amount to balance the situation.
  */
-export function getBalance() {
+export function getBalanceData() {
     // Calculate both users deficits
     const u1deficit = getUserDeficit(1), u2deficit = getUserDeficit(2);
     const difference = Math.abs(u1deficit - u2deficit);
     // Determine the user with higher deficit and return half of the difference as the amount to balance
     return u1deficit === u2deficit
-        ? { user_id: 0, amount: 0 }
-        : { user_id: u1deficit < u2deficit ? 1 : 2, amount: difference/2 };
+        ? { user_id: 0, amount: 0, u1deficit: u1deficit, u2deficit: u2deficit}
+        : { user_id: u1deficit < u2deficit ? 1 : 2, amount: difference/2, u1deficit: u1deficit, u2deficit: u2deficit};
 }
 
 /**
@@ -50,8 +50,8 @@ export function addTransaction(transactionData) {
  * Handle the balance confirmation by adding two transactions to balance the situation.
  */
 export function handleBalanceConfirmed() {
-    const user_id = getBalance().user_id;
-    const amount = getBalance().amount;
+    const user_id = getBalanceData().user_id;
+    const amount = getBalanceData().amount;
     // Add two transactions to balance the situation
     addTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
     addTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
