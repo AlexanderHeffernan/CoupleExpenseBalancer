@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import db from '../firebase/init.js';
+import { db, auth } from '../firebase/init.js';
 import { collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
 
 // Define a reactive reference to store the transactions
@@ -63,7 +63,7 @@ export function balanceConfirmed() {
 
 async function saveTransaction(transaction) {
     // 'transaction' collection reference
-    const colRef = collection(db, 'transactions');
+    const colRef = collection(db, `users/${auth.currentUser.uid}/transactions`);
     // data to send
     const transactionObj = {
         id: transaction.id,
@@ -84,14 +84,14 @@ async function saveTransaction(transaction) {
 
 export async function getTransactions() {
     // Get all documents from the 'transactions' collection
-    const querySnapshot = await getDocs(collection(db, 'transactions'));
+    const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/transactions`));
     // Map each document to its data and assign it to the transactions ref
     transactions.value = querySnapshot.docs.map(doc => doc.data());
 }
 
 async function resetTransactions() {
     // Reference to the 'transactions' collection
-    const colRef = collection(db, 'transactions');
+    const colRef = collection(db, `users/${auth.currentUser.uid}/transactions`);
     
     // Get all documents from the 'transactions' collection
     const querySnapshot = await getDocs(colRef);
@@ -101,6 +101,11 @@ async function resetTransactions() {
         await deleteDoc(doc.ref);
     });
 
+    // Clear the transactions ref
+    transactions.value = [];
+}
+
+export function clearTransactions() {
     // Clear the transactions ref
     transactions.value = [];
 }

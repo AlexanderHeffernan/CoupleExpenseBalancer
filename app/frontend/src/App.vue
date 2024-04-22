@@ -1,10 +1,33 @@
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
-import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed, getTransactions } from './utils/transactions.js';
+import SignInUp from './pages/SignInUp.vue';
+import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed, getTransactions, clearTransactions } from './utils/transactions.js';
+import { auth } from './firebase/init.js';
+import { signOut } from 'firebase/auth';
+
+// Handle user login
+const isLoggedIn = ref(false);
+const displayName = ref('');
+
+async function login() {
+    isLoggedIn.value = true;
+    displayName.value = auth.currentUser.displayName;
+    await getTransactions();
+    console.log(displayName.value + " logged in");
+}
+
+function logout() {
+    signOut(auth)
+        .then(() => {
+            isLoggedIn.value = false;
+            clearTransactions();
+            console.log("Logged out");
+        })
+}
 
 // Handle page navigation
 let currentPage = ref('home');
@@ -21,18 +44,17 @@ function handleBalanceConfirmed() {
     balanceConfirmed();
 }
 
-// Load transactions from server
-onMounted(async() => {
-    await getTransactions();
-});
-
 </script>
 
 <template>
+    <div v-if="!isLoggedIn">
+        <SignInUp @loggedIn="login" />
+    </div>
     <!-- App container -->
-    <div class="app w-screen h-screen bg-background overflow-y-hidden">
+    <div v-else class="app w-screen h-screen bg-background overflow-y-hidden">
         <!-- Current page view-->
         <div class="w-full h-[calc(100%-64px)] overflow-y-auto">
+            <button @click="logout">Sign out</button>
             <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" :transactions="transactions" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" />
             <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalanceData()" @balanceConfirmed="handleBalanceConfirmed" />
