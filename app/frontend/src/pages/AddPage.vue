@@ -27,8 +27,8 @@ const addTransaction = () => {
 </script>
 
 <template>
-    <div class="w-full h-full flex flex-col items-center">
-      <PageHeader pageHeading="Add Expense" />
+    <PageHeader pageHeading="Add Expense" />
+    <div class="w-full h-[calc(100%-90px)] flex flex-col justify-center items-center">
       <div class="flex flex-col items-center shadow-xl p-5 rounded-2xl w-[80%] bg-widget h-[300px]">
         <!-- Description input -->
         <label class="text-left w-full font-bold mb-2">Description</label>

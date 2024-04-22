@@ -41,7 +41,7 @@ export function getBalance() {
  */
 export function addTransaction(transactionData) {
     // Push the transaction with a unique id
-    transactions.value.push({ id: transactions.value.length + 1, ...transactionData});
+    transactions.value.push({ id: transactions.value.length + 1, date: new Date(), ...transactionData});
     // Store the transactions in the local storage
     localStorage.setItem('transactions', JSON.stringify(transactions.value));
 }

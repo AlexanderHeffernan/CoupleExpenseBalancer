@@ -17,7 +17,7 @@ function handleAddTransaction(transactionData) {
 
 // Load transactions from local storage
 onMounted(() => {
-    transactions.value = JSON.parse(localStorage.getItem('transactions')) || [];
+    localStorage.setItem('transactions', JSON.stringify([]));
 });
 
 // Save transactions to local storage

@@ -11,6 +11,7 @@ defineProps(['u1deficit', 'u2deficit', 'transactions']);
 <template>
     <div class="w-full h-full flex flex-col items-center">
       <PageHeader pageHeading="Home" />
+      <br />
       <BalanceGradient :u1deficit="u1deficit" :u2deficit="u2deficit" />
       <ExpenseLog :transactions="transactions" />
     </div>
