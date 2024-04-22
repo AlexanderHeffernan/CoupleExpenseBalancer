@@ -4,5 +4,6 @@ In many relationships, maintaining a 50/50 balance in expenses can be challengin
 # Tech-stack
 So far in the project, my tech-stack includes:
 - Vue.js (front-end framework)
+- FireBase (back-end database and authentication system)
 - Tailwind CSS (styling library)
 - Github with git (version control)
