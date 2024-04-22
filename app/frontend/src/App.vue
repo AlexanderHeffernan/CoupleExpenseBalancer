@@ -23,7 +23,6 @@ function handleBalanceConfirmed() {
 // Load transactions from local storage
 onMounted(() => {
     transactions.value = JSON.parse(localStorage.getItem('transactions'));
-    console.log(transactions.value);
 });
 
 </script>
