@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import db from '../firebase/init.js';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
 
 // Define a reactive reference to store the transactions
 export const transactions = ref([]);
@@ -58,8 +58,7 @@ export function balanceConfirmed() {
     // Add two transactions to balance the situation
     addTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
     addTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
-    transactions.value = [];
-    localStorage.setItem('transactions', JSON.stringify(transactions.value));
+    resetTransactions();
 }
 
 async function saveTransaction(transaction) {
@@ -88,4 +87,20 @@ export async function getTransactions() {
     const querySnapshot = await getDocs(collection(db, 'transactions'));
     // Map each document to its data and assign it to the transactions ref
     transactions.value = querySnapshot.docs.map(doc => doc.data());
+}
+
+async function resetTransactions() {
+    // Reference to the 'transactions' collection
+    const colRef = collection(db, 'transactions');
+    
+    // Get all documents from the 'transactions' collection
+    const querySnapshot = await getDocs(colRef);
+    
+    // Delete each document
+    querySnapshot.forEach(async doc => {
+        await deleteDoc(doc.ref);
+    });
+
+    // Clear the transactions ref
+    transactions.value = [];
 }
