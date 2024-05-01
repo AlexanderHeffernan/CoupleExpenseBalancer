@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
@@ -43,6 +43,13 @@ function handleBalanceConfirmed() {
     changePage('home');
     balanceConfirmed();
 }
+
+// On mount, check if user is logged in
+onMounted(() => {
+    auth.onAuthStateChanged((user) => {
+        if (user) login();
+    });
+});
 
 </script>
 
