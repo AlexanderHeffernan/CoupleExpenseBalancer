@@ -2,6 +2,7 @@ To-Do!
 General (pick me up!):
 - password creation needs security restrictions (e.g over 6 characters)
 - login error messages
+- Notications and badges
 
 Alex:
 
