@@ -1,0 +1,9 @@
+{
+    "name": "Couple Expense Balancer",
+    "short_name": "Expense Balancer",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "apple-mobile-web-app-capable": "yes"
+}
