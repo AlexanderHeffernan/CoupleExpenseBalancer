@@ -5,9 +5,13 @@ import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
 import SignInUp from './pages/SignInUp.vue';
+import LoadingScreen from './pages/LoadingScreen.vue';
 import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed, getTransactions, clearTransactions } from './utils/transactions.js';
 import { auth } from './firebase/init.js';
 import { signOut } from 'firebase/auth';
+
+// Handle loading
+const isLoading = ref(true);
 
 // Handle user login
 const isLoggedIn = ref(false);
@@ -48,12 +52,17 @@ function handleBalanceConfirmed() {
 onMounted(() => {
     auth.onAuthStateChanged((user) => {
         if (user) login();
+
+        isLoading.value = false;
     });
 });
 
 </script>
 
 <template>
+    <!-- Loading screen -->
+    <LoadingScreen :isLoading="isLoading" />
+    <!-- Sign in/up form -->
     <div v-if="!isLoggedIn">
         <SignInUp @loggedIn="login" />
     </div>
