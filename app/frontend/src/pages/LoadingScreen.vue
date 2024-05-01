@@ -6,7 +6,9 @@ defineProps(['isLoading']);
 </script>
 
 <template>
-    <div class="loadingScreen flex items-center justify-center bg-white" :class="{ 'fade-in': isLoading, 'fade-out': !isLoading }">
+    <div class="loadingScreen flex items-center justify-center bg-white"
+         :class="{ 'fade-in': isLoading, 'fade-out': !isLoading }"
+         :style="{ 'pointer-events': isLoading ? 'auto' : 'none' }">
         <div class="loader animate-spin rounded-full border-t-4 border-b-4 border-primary h-16 w-16"></div>
     </div>
 </template>
