@@ -38,7 +38,10 @@ function logout() {
 // Handle page navigation
 let currentPage = ref('home');
 function getPage() { return currentPage.value; }
-function changePage(page) { currentPage.value = page; }
+function changePage(page) { 
+    if (isAccountPageOpen.value) { return null; }
+    currentPage.value = page; 
+}
 
 function handleAddTransaction(transactionData) {
     changePage('home');
@@ -80,8 +83,8 @@ onMounted(() => {
         <!-- Current page view-->
         <div class="w-full h-[calc(100%-64px)] overflow-y-auto">
             <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" :transactions="transactions" @openAccountPage="setAccountPage(true)" />
-            <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" />
-            <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalanceData()" @balanceConfirmed="handleBalanceConfirmed" />
+            <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" @openAccountPage="setAccountPage(true)" />
+            <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalanceData()" @balanceConfirmed="handleBalanceConfirmed" @openAccountPage="setAccountPage(true)" />
             <AccountPage :isAccountPageOpen="isAccountPageOpen" @closeAccountPage="setAccountPage(false)" @logout="logout" />
         </div>
         <!-- Navbar -->

@@ -5,7 +5,7 @@ import PageHeader from '../components/PageHeader.vue';
 const stage = ref(0);
 
 const props = defineProps(['balanceData']);
-const emit = defineEmits(['balanceConfirmed'])
+const emit = defineEmits(['balanceConfirmed', 'openAccountPage'])
 
 function updateStage() {
     if (stage.value === 0) {
@@ -69,7 +69,7 @@ function isBalanced() {
 </script>
 
 <template>
-    <PageHeader pageHeading="Balance" />
+    <PageHeader pageHeading="Balance" @openAccountPage="emit('openAccountPage')" />
     <div v-if="!isBalanced()" class="w-full h-[calc(100%-90px)] flex flex-col justify-center items-center">
         <div :class="getWidgetColor() + ` flex flex-col items-center shadow-xl p-5 rounded-2xl w-[80%]`">
             <h2 class="mr-auto text-text text-2xl font-bold mb-3">Summary:</h2>

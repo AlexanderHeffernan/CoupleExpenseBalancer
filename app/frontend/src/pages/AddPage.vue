@@ -2,7 +2,7 @@
 import { ref, defineEmits } from 'vue';
 import PageHeader from '../components/PageHeader.vue';
 
-const emit = defineEmits(['addTransaction'])
+const emit = defineEmits(['addTransaction', 'openAccountPage'])
 
 const description = ref('');
 const user_id = ref();
@@ -27,7 +27,7 @@ const addTransaction = () => {
 </script>
 
 <template>
-    <PageHeader pageHeading="Add Expense" />
+    <PageHeader pageHeading="Add Expense" @openAccountPage="emit('openAccountPage')" />
     <div class="w-full h-[calc(100%-90px)] flex flex-col justify-center items-center">
       <div class="flex flex-col items-center shadow-xl p-5 rounded-2xl w-[80%] bg-widget h-[300px]">
         <!-- Description input -->
