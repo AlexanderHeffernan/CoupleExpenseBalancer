@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
 import SignInUp from './pages/SignInUp.vue';
+import AccountPage from './pages/AccountPage.vue';
 import LoadingScreen from './pages/LoadingScreen.vue';
 import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed, getTransactions, clearTransactions } from './utils/transactions.js';
 import { auth } from './firebase/init.js';
@@ -29,6 +30,7 @@ function logout() {
         .then(() => {
             isLoggedIn.value = false;
             clearTransactions();
+            isAccountPageOpen.value = false;
             console.log("Logged out");
         })
 }
@@ -46,6 +48,13 @@ function handleAddTransaction(transactionData) {
 function handleBalanceConfirmed() {
     changePage('home');
     balanceConfirmed();
+}
+
+// Handle user settings page
+let isAccountPageOpen = ref(false);
+
+function setAccountPage(toggle) {
+    isAccountPageOpen.value = toggle;
 }
 
 // On mount, check if user is logged in
@@ -70,10 +79,10 @@ onMounted(() => {
     <div v-else class="app w-screen h-screen bg-background overflow-y-hidden">
         <!-- Current page view-->
         <div class="w-full h-[calc(100%-64px)] overflow-y-auto">
-            <button @click="logout">Sign out</button>
-            <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" :transactions="transactions" />
+            <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" :transactions="transactions" @openAccountPage="setAccountPage(true)" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" />
             <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalanceData()" @balanceConfirmed="handleBalanceConfirmed" />
+            <AccountPage :isAccountPageOpen="isAccountPageOpen" @closeAccountPage="setAccountPage(false)" @logout="logout" />
         </div>
         <!-- Navbar -->
         <div class="navbar flex fixed bottom-0 left-0 w-full h-20 bg-accent rounded-t-3xl">
