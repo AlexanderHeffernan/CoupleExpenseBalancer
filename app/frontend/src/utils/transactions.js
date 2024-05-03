@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { db, auth } from '../firebase/init.js';
 import { collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
+import { getDoc, doc } from 'firebase/firestore';
 
 // Define a reactive reference to store the transactions
 export const transactions = ref([]);
@@ -83,10 +84,22 @@ async function saveTransaction(transaction) {
 }
 
 export async function getTransactions() {
+    // Get the current user's document
+    const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
+    const userData = userDoc.data();
+
     // Get all documents from the 'transactions' collection
     const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/transactions`));
     // Map each document to its data and assign it to the transactions ref
     transactions.value = querySnapshot.docs.map(doc => doc.data());
+
+    // Check if partnerUid exists
+    if (userData.partnerUid) {
+        // Get all document from the partner's 'transactions' collection
+        const partnerQuerySnapshot = await getDocs(collection(db, `users/${userData.partnerUid}/transactions`));
+        // Map each document to its data and assign it to the transactions ref
+        transactions.value = transactions.value.concat(partnerQuerySnapshot.docs.map(doc => doc.data()));
+    }
 }
 
 async function resetTransactions() {

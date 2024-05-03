@@ -8,8 +8,9 @@ import SignInUp from './pages/SignInUp.vue';
 import AccountPage from './pages/AccountPage.vue';
 import LoadingScreen from './pages/LoadingScreen.vue';
 import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed, getTransactions, clearTransactions } from './utils/transactions.js';
-import { auth } from './firebase/init.js';
+import { auth, db } from './firebase/init.js';
 import { signOut } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
 
 // Handle loading
 const isLoading = ref(true);
@@ -22,7 +23,11 @@ async function login() {
     isLoggedIn.value = true;
     displayName.value = auth.currentUser.displayName;
     await getTransactions();
-    console.log(displayName.value + " logged in");
+    
+    if (auth.currentUser) {
+        const docRef = doc(db, `users/${auth.currentUser.uid}`);
+        await setDoc(docRef, {email: auth.currentUser.email }, { merge: true });
+    }
 }
 
 function logout() {

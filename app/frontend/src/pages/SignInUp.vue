@@ -12,7 +12,7 @@ const signUpPassword = ref('');
 const signInEmail = ref('');
 const signInPassword = ref('');
 
-function signUp() {
+async function signUp() {
     // register new user
     createUserWithEmailAndPassword(auth, signUpEmail.value, signUpPassword.value)
         .then(() => {
