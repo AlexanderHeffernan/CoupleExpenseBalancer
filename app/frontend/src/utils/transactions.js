@@ -13,13 +13,16 @@ export const transactions = ref([]);
  */
 export function getUserDeficit(user_id) {
     // Calculate the deficit by summing up expenses and subtracting incomes
-    return transactions.value.reduce((total, transaction) => {
+    const deficit = transactions.value.reduce((total, transaction) => {
         return transaction.user_id === user_id 
             ? transaction.expense 
                 ? total + transaction.amount 
                 : total - transaction.amount 
             : total;
     }, 0);
+
+    // Return the deficit with 2 decimal places
+    return Math.round(deficit * 100) / 100;
 }
 
 /**
