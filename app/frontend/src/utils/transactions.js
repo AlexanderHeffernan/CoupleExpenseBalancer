@@ -106,6 +106,10 @@ export async function getTransactions() {
 }
 
 async function resetTransactions() {
+    // Get current user's document
+    const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
+    const userData = userDoc.data();
+
     // Reference to the 'transactions' collection
     const colRef = collection(db, `users/${auth.currentUser.uid}/transactions`);
     
@@ -116,6 +120,19 @@ async function resetTransactions() {
     querySnapshot.forEach(async doc => {
         await deleteDoc(doc.ref);
     });
+
+    if (userData.partnerUid) {
+        // Reference to the partner's 'transactions' collection
+        const partnerColRef = collection(db, `users/${userData.partnerUid}/transactions`);
+        
+        // Get all documents from the partner's 'transactions' collection
+        const partnerQuerySnapshot = await getDocs(partnerColRef);
+        
+        // Delete each document
+        partnerQuerySnapshot.forEach(async doc => {
+            await deleteDoc(doc.ref);
+        });
+    }
 
     // Clear the transactions ref
     transactions.value = [];

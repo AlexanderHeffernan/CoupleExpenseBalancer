@@ -1,21 +1,42 @@
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, onMounted } from 'vue';
+import { db, auth } from '../firebase/init.js';
+import { getDoc, doc } from 'firebase/firestore';
 import PageHeader from '../components/PageHeader.vue';
 
 const emit = defineEmits(['addTransaction', 'openAccountPage'])
 
+const users = ref([]);
+
+async function getUserNickNames() {
+  const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
+  const userData = userDoc.data();
+
+  if (userData.partnerUid) {
+    const partnerDoc = await getDoc(doc(db, `users/${userData.partnerUid}`));
+    const partnerData = partnerDoc.data();
+    return [userData.nickname, partnerData.nickname];
+  }
+  return [userData.nickname];
+}
+
+function getIDFromNickName(nickname) {
+  if (nickname == 'Alex') { return 2; }
+  return 1;
+}
+
 const description = ref('');
-const user_id = ref();
+const user_name = ref();
 const amount = ref();
 
 const addTransaction = () => {
-  if (!description.value || !user_id.value || !amount.value) {
+  if (!description.value || !amount.value) {
     alert('Please fill in all fields');
     return;
   }
   const transactionData = {
     description: description.value,
-    user_id: user_id.value,
+    user_id: getIDFromNickName("Alex"),
     expense: true,
     amount: parseFloat(amount.value),
     balance: false
@@ -23,6 +44,11 @@ const addTransaction = () => {
 
   emit('addTransaction', transactionData);
 };
+
+onMounted(async () => {
+  users.value = await getUserNickNames();
+  user_name.value = users.value[0];
+});
 
 </script>
 
@@ -36,8 +62,10 @@ const addTransaction = () => {
         <div class="flex gap-5 mb-10">
           <div>
             <!-- User ID input -->
-            <label class="text-left w-full font-bold">User_ID</label>
-            <input class="w-full rounded-lg mt-2 p-2" type="number" placeholder="1" v-model="user_id" />
+            <label class="text-left w-full font-bold">Name</label>
+            <select class="w-full rounded-lg mt-2 p-2" v-model="user_name">
+              <option v-for="user in users" :key="user" :value="user">{{ user }}</option>
+            </select>
           </div>
           <div>
             <!-- Amount input -->
