@@ -3,21 +3,19 @@ import { ref, defineEmits, onMounted } from 'vue';
 import { db, auth } from '../firebase/init.js';
 import { getDoc, doc } from 'firebase/firestore';
 import PageHeader from '../components/PageHeader.vue';
+import { getUserData } from '../utils/userAccount.js';
 
 const emit = defineEmits(['addTransaction', 'openAccountPage'])
 
 const users = ref([]);
 
 async function getUserNickNames() {
-  const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
-  const userData = userDoc.data();
-
-  if (userData.partnerUid) {
-    const partnerDoc = await getDoc(doc(db, `users/${userData.partnerUid}`));
-    const partnerData = partnerDoc.data();
-    return [userData.nickname, partnerData.nickname];
+  const userName = await getUserData('name');
+  const partnerUid = await getUserData('partnerUid');
+  if (partnerUid) {
+    return [userName, await getUserData('name', partnerUid)];
   }
-  return [userData.nickname];
+  return [partnerUid];
 }
 
 async function getIDFromNickName(nickname) {

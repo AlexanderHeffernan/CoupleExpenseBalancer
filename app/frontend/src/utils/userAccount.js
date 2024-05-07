@@ -44,10 +44,10 @@ export async function logout() {
 // get user uid
 
 // get user data
-export async function getUserData(dataLabel) {
+export async function getUserData(dataLabel, uid = auth.currentUser.uid) {
     try {
-        // Get the document corresponding to the current user
-        const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
+        // Get the document corresponding to the specified user
+        const userDoc = await getDoc(doc(db, `users/${uid}`));
 
         // Ensure the document exists
         if (!userDoc.exists()) { throw new Error("User document does not exist"); }
