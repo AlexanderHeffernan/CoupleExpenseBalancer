@@ -11,10 +11,32 @@ export const transactions = ref([]);
  * @param {number} user_id - The ID of the user
  * @returns {number} - The deficit amount of the user
  */
-export function getUserDeficit(user_id) {
+export async function getUserDeficit(user_id) {
+    // Get the current user's document
+    const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
+    const userData = userDoc.data();
+
+    let userUid;
+
+    if (user_id == 1) {
+        if (userData.orignal) {
+            userUid = auth.currentUser.uid;
+        }
+        else {
+            userUid = userData.partnerUid;
+        }
+    } else if (user_id == 2) {
+        if (userData.orignal) {
+            userUid = userData.partnerUid;
+        }
+        else {
+            userUid = auth.currentUser.uid;
+        }
+    }
+
     // Calculate the deficit by summing up expenses and subtracting incomes
     const deficit = transactions.value.reduce((total, transaction) => {
-        return transaction.user_id === user_id 
+        return transaction.user_id === userUid 
             ? transaction.expense 
                 ? total + transaction.amount 
                 : total - transaction.amount 
@@ -31,9 +53,9 @@ export function getUserDeficit(user_id) {
  *                       the user_id of the user who has to pay; and
  *                       the amount to balance the situation.
  */
-export function getBalanceData() {
+export async function getBalanceData() {
     // Calculate both users deficits
-    const u1deficit = getUserDeficit(1), u2deficit = getUserDeficit(2);
+    const u1deficit = await getUserDeficit(1), u2deficit = await getUserDeficit(2);
     const difference = Math.abs(u1deficit - u2deficit);
     // Determine the user with higher deficit and return half of the difference as the amount to balance
     return u1deficit === u2deficit
@@ -48,8 +70,7 @@ export function getBalanceData() {
 export function addTransaction(transactionData) {
     // Push the transaction with a unique id
     transactions.value.push({ id: transactions.value.length + 1, date: new Date(), ...transactionData});
-    // Store the transactions in the local storage
-    localStorage.setItem('transactions', JSON.stringify(transactions.value));
+
     saveTransaction(transactions.value[transactions.value.length - 1]);
 }
 

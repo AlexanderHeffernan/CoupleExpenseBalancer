@@ -20,28 +20,33 @@ async function getUserNickNames() {
   return [userData.nickname];
 }
 
-function getIDFromNickName(nickname) {
-  if (nickname == 'Alex') { return 2; }
-  return 1;
+async function getIDFromNickName(nickname) {
+  if (users.value[0] === nickname) {
+    return auth.currentUser.uid;
+  } else {
+    const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
+    const userData = userDoc.data();
+    return userData.partnerUid;
+  }
 }
 
 const description = ref('');
 const user_name = ref();
 const amount = ref();
 
-const addTransaction = () => {
+const addTransaction = async () => {
   if (!description.value || !amount.value) {
     alert('Please fill in all fields');
     return;
   }
   const transactionData = {
     description: description.value,
-    user_id: getIDFromNickName("Alex"),
+    user_id: await getIDFromNickName(user_name.value),
     expense: true,
     amount: parseFloat(amount.value),
     balance: false
   };
-
+  console.log(transactionData.user_id);
   emit('addTransaction', transactionData);
 };
 

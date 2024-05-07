@@ -48,9 +48,12 @@ function changePage(page) {
     currentPage.value = page; 
 }
 
-function handleAddTransaction(transactionData) {
+async function handleAddTransaction(transactionData) {
     changePage('home');
     addTransaction(transactionData);
+    u1deficit.value = await getUserDeficit(1);
+    u2deficit.value = await getUserDeficit(2);
+    balanceData.value = await getBalanceData();
 }
 
 function handleBalanceConfirmed() {
@@ -65,10 +68,21 @@ function setAccountPage(toggle) {
     isAccountPageOpen.value = toggle;
 }
 
+const u1deficit = ref(0);
+const u2deficit = ref(0);
+const balanceData = ref(null);
+
 // On mount, check if user is logged in
-onMounted(() => {
-    auth.onAuthStateChanged((user) => {
-        if (user) login();
+onMounted(async () => {
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            await login();
+            if (auth.currentUser) {
+                u1deficit.value = await getUserDeficit(1);
+                u2deficit.value = await getUserDeficit(2);
+                balanceData.value = await getBalanceData();
+            }
+        }
 
         isLoading.value = false;
     });
@@ -87,9 +101,9 @@ onMounted(() => {
     <div v-else class="app w-screen h-screen bg-background overflow-y-hidden">
         <!-- Current page view-->
         <div class="w-full h-[calc(100%-64px)] overflow-y-auto">
-            <HomePage v-if="currentPage == 'home'" :u1deficit="getUserDeficit(1)" :u2deficit="getUserDeficit(2)" :transactions="transactions" @openAccountPage="setAccountPage(true)" />
+            <HomePage v-if="currentPage == 'home'" :u1deficit="u1deficit" :u2deficit="u2deficit" :transactions="transactions" @openAccountPage="setAccountPage(true)" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" @openAccountPage="setAccountPage(true)" />
-            <BalancePage v-if="currentPage == 'balance'" :balanceData="getBalanceData()" @balanceConfirmed="handleBalanceConfirmed" @openAccountPage="setAccountPage(true)" />
+            <BalancePage v-if="currentPage == 'balance'" :balanceData="balanceData" @balanceConfirmed="handleBalanceConfirmed" @openAccountPage="setAccountPage(true)" />
             <AccountPage :isAccountPageOpen="isAccountPageOpen" @closeAccountPage="setAccountPage(false)" @logout="logout" />
         </div>
         <!-- Navbar -->
