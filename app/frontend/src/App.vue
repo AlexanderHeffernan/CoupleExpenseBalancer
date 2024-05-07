@@ -1,44 +1,17 @@
 <script setup>
 
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import HomePage from './pages/HomePage.vue';
 import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
 import SignInUp from './pages/SignInUp.vue';
 import AccountPage from './pages/AccountPage.vue';
 import LoadingScreen from './pages/LoadingScreen.vue';
-import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed, getTransactions, clearTransactions } from './utils/transactions.js';
-import { auth, db } from './firebase/init.js';
-import { signOut } from 'firebase/auth';
-import { setDoc, doc } from 'firebase/firestore';
+import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed } from './utils/transactions.js';
+import { isLoggedIn } from './utils/userAccount.js';
 
 // Handle loading
-const isLoading = ref(true);
-
-// Handle user login
-const isLoggedIn = ref(false);
-const displayName = ref('');
-
-async function login() {
-    isLoggedIn.value = true;
-    displayName.value = auth.currentUser.displayName;
-    await getTransactions();
-    
-    if (auth.currentUser) {
-        const docRef = doc(db, `users/${auth.currentUser.uid}`);
-        await setDoc(docRef, {email: auth.currentUser.email }, { merge: true });
-    }
-}
-
-function logout() {
-    signOut(auth)
-        .then(() => {
-            isLoggedIn.value = false;
-            clearTransactions();
-            isAccountPageOpen.value = false;
-            console.log("Logged out");
-        })
-}
+const isLoading = ref(false);
 
 // Handle page navigation
 let currentPage = ref('home');
@@ -72,22 +45,6 @@ const u1deficit = ref(0);
 const u2deficit = ref(0);
 const balanceData = ref(null);
 
-// On mount, check if user is logged in
-onMounted(async () => {
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            await login();
-            if (auth.currentUser) {
-                u1deficit.value = await getUserDeficit(1);
-                u2deficit.value = await getUserDeficit(2);
-                balanceData.value = await getBalanceData();
-            }
-        }
-
-        isLoading.value = false;
-    });
-});
-
 </script>
 
 <template>
@@ -95,7 +52,7 @@ onMounted(async () => {
     <LoadingScreen :isLoading="isLoading" />
     <!-- Sign in/up form -->
     <div v-if="!isLoggedIn">
-        <SignInUp @loggedIn="login" />
+        <SignInUp />
     </div>
     <!-- App container -->
     <div v-else class="app w-screen h-screen bg-background overflow-y-hidden">
@@ -104,7 +61,7 @@ onMounted(async () => {
             <HomePage v-if="currentPage == 'home'" :u1deficit="u1deficit" :u2deficit="u2deficit" :transactions="transactions" @openAccountPage="setAccountPage(true)" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" @openAccountPage="setAccountPage(true)" />
             <BalancePage v-if="currentPage == 'balance'" :balanceData="balanceData" @balanceConfirmed="handleBalanceConfirmed" @openAccountPage="setAccountPage(true)" />
-            <AccountPage :isAccountPageOpen="isAccountPageOpen" @closeAccountPage="setAccountPage(false)" @logout="logout" />
+            <AccountPage :isAccountPageOpen="isAccountPageOpen" @closeAccountPage="setAccountPage(false)" />
         </div>
         <!-- Navbar -->
         <div class="navbar flex fixed bottom-0 left-0 w-full h-20 bg-accent rounded-t-3xl">

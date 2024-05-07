@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { db, auth } from '../firebase/init.js';
 import { collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
 import { getDoc, doc } from 'firebase/firestore';
+import { getUserData } from './userAccount.js';
 
 // Define a reactive reference to store the transactions
 export const transactions = ref([]);
@@ -13,23 +14,20 @@ export const transactions = ref([]);
  */
 export async function getUserDeficit(user_id) {
     // Get the current user's document
-    const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
-    const userData = userDoc.data();
 
     let userUid;
     if (user_id == 1) {
-        if (userData.original) {
+        if (getUserData('original')) {
             userUid = auth.currentUser.uid;
         }
         else {
-            userUid = userData.partnerUid;
+            userUid = getUserData('partnerUid');
         }
     } else if (user_id == 2) {
-        if (userData.original) {
-            userUid = userData.partnerUid;
+        if (getUserData('original')) {
+            userUid = getUserData('partnerUid');
         }
         else {
-            
             userUid = auth.currentUser.uid;
         }
     }
@@ -118,7 +116,7 @@ export async function getTransactions() {
     transactions.value = querySnapshot.docs.map(doc => doc.data());
 
     // Check if partnerUid exists
-    if (userData.partnerUid) {
+    if (getUserData('partnerUid')) {
         // Get all document from the partner's 'transactions' collection
         const partnerQuerySnapshot = await getDocs(collection(db, `users/${userData.partnerUid}/transactions`));
         // Map each document to its data and assign it to the transactions ref
@@ -142,7 +140,7 @@ async function resetTransactions() {
         await deleteDoc(doc.ref);
     });
 
-    if (userData.partnerUid) {
+    if (getUserData('partnerUid')) {
         // Reference to the partner's 'transactions' collection
         const partnerColRef = collection(db, `users/${userData.partnerUid}/transactions`);
         

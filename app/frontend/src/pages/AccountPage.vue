@@ -1,16 +1,17 @@
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue';
 import { partnerAccounts } from '../utils/partneringAccounts.js';
+import { logout } from '../utils/userAccount.js';
 
 defineProps(['isAccountPageOpen']);
-const emits = defineEmits(['closeAccountPage', 'logout']);
+const emits = defineEmits(['closeAccountPage']);
 
 function closeAccountPage() {
     emits('closeAccountPage');
 }
 
 function logoutButton() {
-    emits('logout');
+    logout();
 }
 
 // Handle partner account settings
