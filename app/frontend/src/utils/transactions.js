@@ -17,19 +17,19 @@ export async function getUserDeficit(user_id) {
     const userData = userDoc.data();
 
     let userUid;
-
     if (user_id == 1) {
-        if (userData.orignal) {
+        if (userData.original) {
             userUid = auth.currentUser.uid;
         }
         else {
             userUid = userData.partnerUid;
         }
     } else if (user_id == 2) {
-        if (userData.orignal) {
+        if (userData.original) {
             userUid = userData.partnerUid;
         }
         else {
+            
             userUid = auth.currentUser.uid;
         }
     }
