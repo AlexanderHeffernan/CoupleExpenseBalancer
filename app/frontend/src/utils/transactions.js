@@ -109,7 +109,7 @@ export async function getTransactions() {
     transactions.value = querySnapshot.docs.map(doc => doc.data());
 
     // Check if partnerUid exists
-    if (getUserData('partnerUid')) {
+    if (await getUserData('partnerUid')) {
         // Get all document from the partner's 'transactions' collection
         const partnerQuerySnapshot = await getDocs(collection(db, `users/${userData.partnerUid}/transactions`));
         // Map each document to its data and assign it to the transactions ref
