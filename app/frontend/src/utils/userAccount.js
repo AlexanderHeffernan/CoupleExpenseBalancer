@@ -22,6 +22,7 @@ export async function signup(name, email, password) {
 }
 
 export const isLoggedIn = ref(false);
+export const isPartnered = ref(false);
 
 // On mount, check if user is logged in
 auth.onAuthStateChanged(async (user) => {
@@ -30,6 +31,9 @@ auth.onAuthStateChanged(async (user) => {
         const userDoc = await getDoc(doc(db, `users/${user.uid}`));
         await getTransactions();
         isLoggedIn.value = userDoc.exists(); // Update the value based on whether the user document exists
+        if (await getUserData('partnerUid')) {
+            isPartnered.value = true;
+        }
     } else {
         isLoggedIn.value = false;
     }
