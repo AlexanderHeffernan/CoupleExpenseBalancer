@@ -1,9 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-import { balanceData } from '../utils/transactions';
-
-const u1deficit = ref(balanceData.value.u1deficit);
-const u2deficit = ref(balanceData.value.u2deficit);
+import { u1deficit, u2deficit } from '../utils/transactions';
 
 function getBalancePoint() {
   if (u1deficit.value === 0 && u2deficit.value === 0) {
