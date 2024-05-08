@@ -24,5 +24,5 @@ import { currentPage } from './utils/navigation.js';
             <AccountPage />
         </div>
         <NavBar v-if="isLoggedIn" />
-  </div>
+    </div>
 </template>
