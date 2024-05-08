@@ -1,22 +1,15 @@
 <script setup>
 import { ref } from 'vue';
-import { getBalanceData } from '../utils/transactions';
+import { balanceData } from '../utils/transactions';
 
-const u1deficit = ref(0);
-const u2deficit = ref(0);
-
-(async () => {
-  const balanceData = await getBalanceData();
-  u1deficit.value = balanceData.u1deficit;
-  u2deficit.value = balanceData.u2deficit;
-})();
+const u1deficit = ref(balanceData.value.u1deficit);
+const u2deficit = ref(balanceData.value.u2deficit);
 
 function getBalancePoint() {
   if (u1deficit.value === 0 && u2deficit.value === 0) {
     return 50;
   }
   return u1deficit.value / (u1deficit.value + u2deficit.value) * 100;
-
 }
 
 </script>
