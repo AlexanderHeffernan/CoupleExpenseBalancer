@@ -6,6 +6,7 @@ import { getUserData } from './userAccount.js';
 
 // Define a reactive reference to store the transactions
 export const transactions = ref([]);
+export const balanceData = ref({});
 
 /**
  * Calculate a given users deficit
@@ -73,8 +74,8 @@ export function addTransaction(transactionData) {
  * Handle the balance confirmation by adding two transactions to balance the situation.
  */
 export function balanceConfirmed() {
-    const user_id = getBalanceData().user_id;
-    const amount = getBalanceData().amount;
+    const user_id = balanceData.value.user_id;
+    const amount = balanceData.value.amount;
     // Add two transactions to balance the situation
     addTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
     addTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
@@ -118,6 +119,7 @@ export async function getTransactions() {
         const partnerQuerySnapshot = await getDocs(collection(db, `users/${userData.partnerUid}/transactions`));
         // Map each document to its data and assign it to the transactions ref
         transactions.value = transactions.value.concat(partnerQuerySnapshot.docs.map(doc => doc.data()));
+        balanceData.value = await getBalanceData();
     }
 }
 

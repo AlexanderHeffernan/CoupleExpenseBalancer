@@ -53,7 +53,7 @@ function setAccountPage(toggle) {
         <div class="w-full h-[calc(100%-64px)] overflow-y-auto">
             <HomePage v-if="currentPage == 'home'" @openAccountPage="setAccountPage(true)" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" @openAccountPage="setAccountPage(true)" />
-            <BalancePage v-if="currentPage == 'balance'" :balanceData="balanceData" @balanceConfirmed="handleBalanceConfirmed" @openAccountPage="setAccountPage(true)" />
+            <BalancePage v-if="currentPage == 'balance'" @balanceConfirmed="handleBalanceConfirmed" @openAccountPage="setAccountPage(true)" />
             <AccountPage :isAccountPageOpen="isAccountPageOpen" @closeAccountPage="setAccountPage(false)" />
         </div>
         <!-- Navbar -->

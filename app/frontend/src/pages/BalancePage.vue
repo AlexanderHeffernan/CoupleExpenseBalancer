@@ -1,10 +1,10 @@
 <script setup>
-import { ref, defineProps, defineEmits, watch, onMounted, onUnmounted } from 'vue';
+import { ref, defineEmits, watch, onMounted, onUnmounted } from 'vue';
+import { balanceData } from '../utils/transactions';
 import PageHeader from '../components/PageHeader.vue';
 
 const stage = ref(0);
 
-const props = defineProps(['balanceData']);
 const emit = defineEmits(['balanceConfirmed', 'openAccountPage'])
 
 function updateStage() {
@@ -28,8 +28,8 @@ function changeBackground(exiting) {
         return;
     }
     if (!exiting) {
-        if ((stage.value === 0 && props.balanceData.user_id === 1)
-            || (stage.value === 1 && props.balanceData.user_id === 2)) {
+        if ((stage.value === 0 && balanceData.value.user_id === 1)
+            || (stage.value === 1 && balanceData.value.user_id === 2)) {
             document.querySelector('.app').style.backgroundColor = '#FF6B6B';
             document.querySelector('.balance-nav-button').style.border = '2px solid #FFCCCC';
         } else {
@@ -48,13 +48,13 @@ onUnmounted(() => { changeBackground(true); });
 
 function getWidgetColor() {
     if (stage.value === 0) {
-        if (props.balanceData.user_id === 1) {
+        if (balanceData.value.user_id === 1) {
             return 'bg-accent';
         } else {
             return 'bg-widget';
         }
     } else {
-        if (props.balanceData.user_id === 1) {
+        if (balanceData.value.user_id === 1) {
             return 'bg-widget';
         } else {
             return 'bg-accent';
@@ -63,7 +63,7 @@ function getWidgetColor() {
 }
 
 function isBalanced() {
-    return props.balanceData.u1deficit === props.balanceData.u2deficit;
+    return balanceData.value.u1deficit === balanceData.value.u2deficit;
 }
 
 </script>
