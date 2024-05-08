@@ -1,27 +1,18 @@
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue';
+// Import componens
 import PageHeader from '../components/PageHeader.vue';
 import BalanceGradient from '../components/BalanceGradient.vue';
 import ExpenseLog from '../components/ExpenseLog.vue';
-import { getUserData } from '../utils/userAccount.js';
-
-defineProps(['u1deficit', 'u2deficit', 'transactions']);
-const emit = defineEmits(['openAccountPage']);
-
-const isPartnered = ref(false);
-
-(async () => {
-  const partnerUid = await getUserData('partnerUid');
-  isPartnered.value = partnerUid !== null;
-})();
+// Import utilities
+import { isPartnered } from '../utils/userAccount.js';
 
 </script>
 
 <template>
     <div class="w-full h-full flex flex-col items-center">
-      <PageHeader pageHeading="Home" @openAccountPage="emit('openAccountPage')" />
+      <PageHeader pageHeading="Home" />
       <br />
-      <BalanceGradient v-if="isPartnered" :u1deficit="u1deficit" :u2deficit="u2deficit" />
-      <ExpenseLog :transactions="transactions" />
+      <BalanceGradient v-if="isPartnered" />
+      <ExpenseLog />
     </div>
 </template>

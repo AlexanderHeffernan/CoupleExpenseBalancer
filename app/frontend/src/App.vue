@@ -5,7 +5,7 @@ import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
 import SignInUp from './pages/SignInUp.vue';
 import AccountPage from './pages/AccountPage.vue';
-// Import navbar
+// Import components
 import NavBar from './components/NavBar.vue';
 import LoadingScreen from './components/LoadingScreen.vue';
 // Import utilities
