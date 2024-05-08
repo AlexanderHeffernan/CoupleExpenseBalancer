@@ -1,17 +1,30 @@
 <script setup>
+import { ref } from 'vue';
+// Import relevant utilities
 import { transactions } from '../utils/transactions.js';
+import { getUserData } from '../utils/userAccount.js';
 
+/**
+ * Function to convert date to a readable format (dd/mm/yyyy)
+ * 
+ * @param {Date} date - The date to be converted
+ * @returns {String} - The date in the format dd/mm/yyyy
+ */
 function convertDate(date) {
-    if (!(date instanceof Date)) { date = new Date(date); }
-    if (!date) { return ' '; }
     return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
 }
 
-function convertAmount(amount) {
-    if (!amount) { return ' '; }
-    return "$" + amount.toFixed(2);
-}
-
+const originalUserId = ref('');
+const secondaryUserId = ref('');
+(async () => {
+    if (await getUserData('original')) {
+        originalUserId.value = await getUserData('uid');
+        secondaryUserId.value = await getUserData('partnerUid');
+    } else {
+        originalUserId.value = await getUserData('partnerUid');
+        secondaryUserId.value = await getUserData('uid');
+    }
+})();
 </script>
 
 <template>
@@ -19,12 +32,12 @@ function convertAmount(amount) {
         <h2 class="text-text text-2xl font-bold mb-3">Expenses log:</h2>
         <div class="overflow-y-auto h-[192px] pr-4">
             <div v-for="transaction in transactions" :key="transaction.id">
-                <div class="rounded-xl p-2 mb-2 flex items-center" :class="{ 'bg-primary': transaction.user_id === 1, 'bg-secondary': transaction.user_id === 2 }">
+                <div class="rounded-xl p-2 mb-2 flex items-center" :class="{ 'bg-primary': transaction.user_id === originalUserId, 'bg-secondary': transaction.user_id === secondaryUserId }">
                     <div class="mr-auto">
                         <p class="font-bold text-md">{{ transaction.description }}</p>
                         <p class="text-sm font-light">{{ convertDate(transaction.date) }}</p>
                     </div>
-                    <p class="font-bold">{{ convertAmount(transaction.amount) }}</p>
+                    <p class="font-bold">${{ transaction.amount.toFixed(2) }}</p>
                 </div>
             </div>
         </div>
