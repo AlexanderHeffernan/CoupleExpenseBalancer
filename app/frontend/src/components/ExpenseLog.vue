@@ -1,7 +1,5 @@
 <script setup>
-import { defineProps } from 'vue';
-
-defineProps(['transactions']);
+import { transactions } from '../utils/transactions.js';
 
 function convertDate(date) {
     if (!(date instanceof Date)) { date = new Date(date); }

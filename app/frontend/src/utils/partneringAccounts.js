@@ -16,11 +16,11 @@ export async function partnerAccounts(partnerEmail) {
 
     if (partnerUid) {
         const userRef = doc(db, `users/${auth.currentUser.uid}`);
-        const partnerObj = { partnerUid: partnerUid };
+        const partnerObj = { original: true, partnerUid: partnerUid };
         await setDoc (userRef, partnerObj, { merge: true});
 
         const partnerRef = doc(db, `users/${partnerUid}`);
-        const userObj = { partnerUid: auth.currentUser.uid };
+        const userObj = { original: false, partnerUid: auth.currentUser.uid };
         await setDoc(partnerRef, userObj, { merge: true });
     } else {
         console.log("Fail");

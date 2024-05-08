@@ -13,22 +13,20 @@ export const transactions = ref([]);
  * @returns {number} - The deficit amount of the user
  */
 export async function getUserDeficit(user_id) {
-    // Get the current user's document
-
     let userUid;
     if (user_id == 1) {
         if (getUserData('original')) {
-            userUid = auth.currentUser.uid;
+            userUid = await getUserData('uid');
         }
         else {
-            userUid = getUserData('partnerUid');
+            userUid = await getUserData('partnerUid');
         }
     } else if (user_id == 2) {
         if (getUserData('original')) {
-            userUid = getUserData('partnerUid');
+            userUid = await getUserData('partnerUid');
         }
         else {
-            userUid = auth.currentUser.uid;
+            userUid = await getUserData('uid');
         }
     }
 
@@ -40,7 +38,6 @@ export async function getUserDeficit(user_id) {
                 : total - transaction.amount 
             : total;
     }, 0);
-
     // Return the deficit with 2 decimal places
     return Math.round(deficit * 100) / 100;
 }

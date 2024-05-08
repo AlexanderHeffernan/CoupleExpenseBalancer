@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { db, auth } from '../firebase/init.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
 import { getDoc, setDoc, doc } from 'firebase/firestore';
+import { getTransactions } from './transactions.js';
 
 export async function signup(name, email, password) {
     try {
@@ -25,6 +26,7 @@ export const isLoggedIn = ref(false);
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         const userDoc = await getDoc(doc(db, `users/${user.uid}`));
+        await getTransactions();
         isLoggedIn.value = userDoc.exists(); // Update the value based on whether the user document exists
     } else {
         isLoggedIn.value = false;
@@ -45,6 +47,9 @@ export async function logout() {
 
 // get user data
 export async function getUserData(dataLabel, uid = auth.currentUser.uid) {
+    if (dataLabel === "uid") {
+        return uid;
+    }
     try {
         // Get the document corresponding to the specified user
         const userDoc = await getDoc(doc(db, `users/${uid}`));

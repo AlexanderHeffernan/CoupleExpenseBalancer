@@ -1,12 +1,21 @@
 <script setup>
-import { defineProps } from 'vue';
-const props = defineProps(['u1deficit', 'u2deficit']);
+import { ref } from 'vue';
+import { getBalanceData } from '../utils/transactions';
+
+const u1deficit = ref(0);
+const u2deficit = ref(0);
+
+(async () => {
+  const balanceData = await getBalanceData();
+  u1deficit.value = balanceData.u1deficit;
+  u2deficit.value = balanceData.u2deficit;
+})();
 
 function getBalancePoint() {
-  if (props.u1deficit === 0 && props.u2deficit === 0) {
+  if (u1deficit.value === 0 && u2deficit.value === 0) {
     return 50;
   }
-  return props.u1deficit / (props.u1deficit + props.u2deficit) * 100;
+  return u1deficit.value / (u1deficit.value + u2deficit.value) * 100;
 
 }
 

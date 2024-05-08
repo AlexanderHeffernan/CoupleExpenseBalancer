@@ -7,7 +7,7 @@ import BalancePage from './pages/BalancePage.vue';
 import SignInUp from './pages/SignInUp.vue';
 import AccountPage from './pages/AccountPage.vue';
 import LoadingScreen from './pages/LoadingScreen.vue';
-import { transactions, getUserDeficit, getBalanceData, addTransaction, balanceConfirmed } from './utils/transactions.js';
+import { addTransaction, balanceConfirmed } from './utils/transactions.js';
 import { isLoggedIn } from './utils/userAccount.js';
 
 // Handle loading
@@ -24,9 +24,6 @@ function changePage(page) {
 async function handleAddTransaction(transactionData) {
     changePage('home');
     addTransaction(transactionData);
-    u1deficit.value = await getUserDeficit(1);
-    u2deficit.value = await getUserDeficit(2);
-    balanceData.value = await getBalanceData();
 }
 
 function handleBalanceConfirmed() {
@@ -41,10 +38,6 @@ function setAccountPage(toggle) {
     isAccountPageOpen.value = toggle;
 }
 
-const u1deficit = ref(0);
-const u2deficit = ref(0);
-const balanceData = ref(null);
-
 </script>
 
 <template>
@@ -58,7 +51,7 @@ const balanceData = ref(null);
     <div v-else class="app w-screen h-screen bg-background overflow-y-hidden">
         <!-- Current page view-->
         <div class="w-full h-[calc(100%-64px)] overflow-y-auto">
-            <HomePage v-if="currentPage == 'home'" :u1deficit="u1deficit" :u2deficit="u2deficit" :transactions="transactions" @openAccountPage="setAccountPage(true)" />
+            <HomePage v-if="currentPage == 'home'" @openAccountPage="setAccountPage(true)" />
             <AddPage v-if="currentPage == 'add'" @addTransaction="handleAddTransaction" @openAccountPage="setAccountPage(true)" />
             <BalancePage v-if="currentPage == 'balance'" :balanceData="balanceData" @balanceConfirmed="handleBalanceConfirmed" @openAccountPage="setAccountPage(true)" />
             <AccountPage :isAccountPageOpen="isAccountPageOpen" @closeAccountPage="setAccountPage(false)" />
