@@ -7,6 +7,8 @@ import { getUserData } from './userAccount.js';
 // Define a reactive reference to store the transactions
 export const transactions = ref([]);
 export const balanceData = ref({});
+export const u1deficit = ref(0);
+export const u2deficit = ref(0);
 
 /**
  * Calculate a given users deficit
@@ -63,11 +65,14 @@ export async function getBalanceData() {
  * Add a new transaction to the list of transactions.
  * @param {Object} transactionData - Data of the transaction to be added
  */
-export function addTransaction(transactionData) {
+export async function addTransaction(transactionData) {
     // Push the transaction with a unique id
     transactions.value.push({ id: transactions.value.length + 1, date: new Date(), ...transactionData});
 
     saveTransaction(transactions.value[transactions.value.length - 1]);
+    balanceData.value = await getBalanceData();
+    u1deficit.value = balanceData.value.u1deficit;
+    u2deficit.value = balanceData.value.u2deficit;
 }
 
 /**
@@ -124,6 +129,8 @@ export async function getTransactions() {
         // Map each document to its data and assign it to the transactions ref
         transactions.value = transactions.value.concat(partnerQuerySnapshot.docs.map(doc => doc.data()));
         balanceData.value = await getBalanceData();
+        u1deficit.value = balanceData.value.u1deficit;
+        u2deficit.value = balanceData.value.u2deficit;
     }
 }
 
