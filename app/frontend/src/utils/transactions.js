@@ -16,14 +16,14 @@ export const balanceData = ref({});
 export async function getUserDeficit(user_id) {
     let userUid;
     if (user_id == 1) {
-        if (getUserData('original')) {
+        if (await getUserData('original') === true) {
             userUid = await getUserData('uid');
         }
         else {
             userUid = await getUserData('partnerUid');
         }
     } else if (user_id == 2) {
-        if (getUserData('original')) {
+        if (await getUserData('original') === true) {
             userUid = await getUserData('partnerUid');
         }
         else {
@@ -74,11 +74,6 @@ export function addTransaction(transactionData) {
  * Handle the balance confirmation by adding two transactions to balance the situation.
  */
 export function balanceConfirmed() {
-    const user_id = balanceData.value.user_id;
-    const amount = balanceData.value.amount;
-    // Add two transactions to balance the situation
-    addTransaction({ description: 'Balance', user_id: user_id, expense: true, amount: amount, balance: true });
-    addTransaction({ description: 'Balance', user_id: user_id == 1 ? 2 : 1, expense: false, amount: amount, balance: true });
     resetTransactions();
 }
 

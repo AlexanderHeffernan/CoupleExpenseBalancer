@@ -47,7 +47,7 @@ export async function logout() {
 
 // get user data
 export async function getUserData(dataLabel, uid = auth.currentUser.uid) {
-    if (dataLabel === "uid") {
+    if (dataLabel === 'uid') {
         return uid;
     }
     try {
