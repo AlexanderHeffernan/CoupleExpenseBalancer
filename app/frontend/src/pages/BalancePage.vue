@@ -1,18 +1,18 @@
 <script setup>
-import { ref, defineEmits, watch, onMounted, onUnmounted } from 'vue';
-import { balanceData } from '../utils/transactions';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { balanceData, balanceConfirmed } from '../utils/transactions.js';
+import { changePage } from '../utils/navigation.js';
 import PageHeader from '../components/PageHeader.vue';
 
 const stage = ref(0);
-
-const emit = defineEmits(['balanceConfirmed', 'openAccountPage'])
 
 function updateStage() {
     if (stage.value === 0) {
         stage.value = 1;
     } else {
         stage.value = 0;
-        emit('balanceConfirmed')
+        changePage('home');
+        balanceConfirmed();
     }
 }
 
@@ -69,7 +69,7 @@ function isBalanced() {
 </script>
 
 <template>
-    <PageHeader pageHeading="Balance" @openAccountPage="emit('openAccountPage')" />
+    <PageHeader pageHeading="Balance" />
     <div v-if="!isBalanced()" class="w-full h-[calc(100%-90px)] flex flex-col justify-center items-center">
         <div :class="getWidgetColor() + ` flex flex-col items-center shadow-xl p-5 rounded-2xl w-[80%]`">
             <h2 class="mr-auto text-text text-2xl font-bold mb-3">Summary:</h2>

@@ -3,6 +3,7 @@ import { db, auth } from '../firebase/init.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
 import { getDoc, setDoc, doc } from 'firebase/firestore';
 import { getTransactions } from './transactions.js';
+import { startLoading, stopLoading } from './navigation.js';
 
 export async function signup(name, email, password) {
     try {
@@ -24,6 +25,7 @@ export const isLoggedIn = ref(false);
 
 // On mount, check if user is logged in
 auth.onAuthStateChanged(async (user) => {
+    startLoading();
     if (user) {
         const userDoc = await getDoc(doc(db, `users/${user.uid}`));
         await getTransactions();
@@ -31,6 +33,7 @@ auth.onAuthStateChanged(async (user) => {
     } else {
         isLoggedIn.value = false;
     }
+    stopLoading();
 });
 
 export async function login(email, password) {

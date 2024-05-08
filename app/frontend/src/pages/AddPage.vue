@@ -1,11 +1,11 @@
 <script setup>
-import { ref, defineEmits, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { db, auth } from '../firebase/init.js';
 import { getDoc, doc } from 'firebase/firestore';
 import PageHeader from '../components/PageHeader.vue';
 import { getUserData } from '../utils/userAccount.js';
-
-const emit = defineEmits(['addTransaction', 'openAccountPage'])
+import { changePage } from '../utils/navigation.js';
+import { addTransaction } from '../utils/transactions.js';
 
 const users = ref([]);
 
@@ -32,7 +32,7 @@ const description = ref('');
 const user_name = ref();
 const amount = ref();
 
-const addTransaction = async () => {
+const handleAddTransaction = async () => {
   if (!description.value || !amount.value) {
     alert('Please fill in all fields');
     return;
@@ -45,7 +45,8 @@ const addTransaction = async () => {
     balance: false
   };
   console.log(transactionData.user_id);
-  emit('addTransaction', transactionData);
+  changePage('home');
+  addTransaction(transactionData);
 };
 
 onMounted(async () => {
@@ -56,7 +57,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <PageHeader pageHeading="Add Expense" @openAccountPage="emit('openAccountPage')" />
+    <PageHeader pageHeading="Add Expense" />
     <div class="w-full h-[calc(100%-90px)] flex flex-col justify-center items-center">
       <div class="flex flex-col items-center shadow-xl p-5 rounded-2xl w-[80%] bg-widget h-[300px]">
         <!-- Description input -->
@@ -76,7 +77,7 @@ onMounted(async () => {
             <input class="w-full rounded-lg mt-2 p-2" type="number" placeholder="100" v-model="amount" />
           </div>
         </div>
-        <button class="text-lg bg-primary pl-10 pr-10 pt-2 pb-2 rounded-xl text-white font-semibold" @click="addTransaction">Add</button>  
+        <button class="text-lg bg-primary pl-10 pr-10 pt-2 pb-2 rounded-xl text-white font-semibold" @click="handleAddTransaction">Add</button>  
       </div>
     </div>
 </template>
