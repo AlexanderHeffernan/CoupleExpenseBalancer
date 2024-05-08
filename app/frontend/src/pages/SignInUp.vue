@@ -22,6 +22,7 @@ function handleLogin() {
 </script>
 
 <template>
+    <!-- Sign in/up form -->
     <div class="flex flex-row justify-center items-center h-[100vh]">
         <form  class="flex flex-col items-start h-28" @submit.prevent="handleSignup">
             <h2 class="text-red-500">Sign Up</h2>

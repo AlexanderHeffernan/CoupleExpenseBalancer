@@ -3,6 +3,7 @@ import { currentPage, changePage } from '../utils/navigation.js';
 </script>
 
 <template>
+    <!-- Navbar -->
     <div class="navbar flex fixed bottom-0 left-0 w-full h-20 bg-accent rounded-t-3xl">
         <!-- Home button -->
         <button class="transition-transform ease relative rounded-t-3xl w-20 flex justify-center items-center" :class="currentPage === 'home' ? '-translate-y-5 bg-primary' : ''" @click="changePage('home')">

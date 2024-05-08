@@ -1,11 +1,10 @@
 <script setup>
-import { defineProps } from 'vue';
-
-defineProps(['isLoading']);
+import { isLoading } from '../utils/navigation.js';
 
 </script>
 
 <template>
+    <!-- Loading screen -->
     <div class="loadingScreen flex items-center justify-center bg-white"
          :class="{ 'fade-in': isLoading, 'fade-out': !isLoading }"
          :style="{ 'pointer-events': isLoading ? 'auto' : 'none' }">
