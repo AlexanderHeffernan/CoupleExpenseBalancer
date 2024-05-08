@@ -105,8 +105,17 @@ export async function getTransactions() {
 
     // Get all documents from the 'transactions' collection
     const querySnapshot = await getDocs(collection(db, `users/${auth.currentUser.uid}/transactions`));
-    // Map each document to its data and assign it to the transactions ref
-    transactions.value = querySnapshot.docs.map(doc => doc.data());
+    
+    // Convert timestamps to JavaScript Date objects
+    const transactionsData = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        // Convert timestamps to Date objects
+        data.date = data.date.toDate(); // Assuming 'date' is the field containing the timestamp
+        return data;
+    });
+
+    // Assign converted data to the transactions ref
+    transactions.value = transactionsData;
 
     // Check if partnerUid exists
     if (await getUserData('partnerUid')) {
