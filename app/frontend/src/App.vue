@@ -5,9 +5,9 @@ import AddPage from './pages/AddPage.vue';
 import BalancePage from './pages/BalancePage.vue';
 import SignInUp from './pages/SignInUp.vue';
 import AccountPage from './pages/AccountPage.vue';
-import LoadingScreen from './pages/LoadingScreen.vue';
 // Import navbar
 import NavBar from './components/NavBar.vue';
+import LoadingScreen from './components/LoadingScreen.vue';
 // Import utilities
 import { isLoggedIn } from './utils/userAccount.js';
 import { currentPage } from './utils/navigation.js';
