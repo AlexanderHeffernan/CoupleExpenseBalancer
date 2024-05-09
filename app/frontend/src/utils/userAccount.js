@@ -23,6 +23,8 @@ export async function signup(name, email, password) {
 
 export const isLoggedIn = ref(false);
 export const isPartnered = ref(false);
+export const username = ref('');
+export const partnerUsername = ref('');
 
 // On mount, check if user is logged in
 auth.onAuthStateChanged(async (user) => {
@@ -31,8 +33,10 @@ auth.onAuthStateChanged(async (user) => {
         const userDoc = await getDoc(doc(db, `users/${user.uid}`));
         await getTransactions();
         isLoggedIn.value = userDoc.exists(); // Update the value based on whether the user document exists
+        username.value = await getUserData('name');
         if (await getUserData('partnerUid')) {
             isPartnered.value = true;
+            partnerUsername.value = await getUserData('name', await getUserData('partnerUid'));
         }
     } else {
         isLoggedIn.value = false;
@@ -57,6 +61,7 @@ export async function getUserData(dataLabel, uid = auth.currentUser.uid) {
     if (dataLabel === 'uid') {
         return uid;
     }
+    if (!uid) { console.log("No UID provided."); }
     try {
         // Get the document corresponding to the specified user
         const userDoc = await getDoc(doc(db, `users/${uid}`));

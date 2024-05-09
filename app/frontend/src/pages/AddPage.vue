@@ -1,35 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { db, auth } from '../firebase/init.js';
-import { getDoc, doc } from 'firebase/firestore';
+import { ref } from 'vue';
 import PageHeader from '../components/PageHeader.vue';
-import { getUserData } from '../utils/userAccount.js';
+import { username, partnerUsername, getUserData } from '../utils/userAccount.js';
 import { changePage } from '../utils/navigation.js';
 import { addTransaction } from '../utils/transactions.js';
 
-const users = ref([]);
-
-async function getUserNickNames() {
-  const userName = await getUserData('name');
-  const partnerUid = await getUserData('partnerUid');
-  if (partnerUid) {
-    return [userName, await getUserData('name', partnerUid)];
-  }
-  return [partnerUid];
-}
+const users = ref([username.value, partnerUsername.value]);
 
 async function getIDFromNickName(nickname) {
   if (users.value[0] === nickname) {
-    return auth.currentUser.uid;
+    return await getUserData('uid');
   } else {
-    const userDoc = await getDoc(doc(db, `users/${auth.currentUser.uid}`));
-    const userData = userDoc.data();
-    return userData.partnerUid;
+    return await getUserData('partnerUid');
   }
 }
 
 const description = ref('');
-const user_name = ref();
+const user_name = ref(username.value);
 const amount = ref();
 
 const handleAddTransaction = async () => {
@@ -48,11 +35,6 @@ const handleAddTransaction = async () => {
   changePage('home');
   addTransaction(transactionData);
 };
-
-onMounted(async () => {
-  users.value = await getUserNickNames();
-  user_name.value = users.value[0];
-});
 
 </script>
 
