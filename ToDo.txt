@@ -3,7 +3,6 @@ General (pick me up!):
 - password creation needs security restrictions (e.g over 6 characters)
 - login error messages
 - Notications and badges (https://developer.apple.com/videos/play/wwdc2023/10120/)
-- User data utility javaScript file
 
 Alex:
 
