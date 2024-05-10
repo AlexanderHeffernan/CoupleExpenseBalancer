@@ -5,38 +5,33 @@ import { getDoc, setDoc, doc } from 'firebase/firestore';
 import { getTransactions } from './transactions.js';
 import { startLoading, stopLoading } from './navigation.js';
 
-export async function signup(name, email, password) {
-    try {
-        await createUserWithEmailAndPassword(auth, email, password);
-
-        await updateProfile(auth.currentUser, {
-            displayName: name
-        });
-
-        await createUserDocument(email, auth.currentUser.displayName);
-        isLoggedIn.value = true;
-        return true;
-    } catch (error) {
-        console.error("Error signing up user: ", error);
-    }
-}
-
+// Global variables
 export const isLoggedIn = ref(false);
-export const isPartnered = ref(false);
-export const username = ref('');
-export const partnerUsername = ref('');
+const userData = ref(null);
+const partnerUserData = ref(null);
 
-// On mount, check if user is logged in
+/**
+ * Initialize user data and authentication status on authentication state change.
+ * 
+ * @param {Object} user - Firebase user object
+ */
 auth.onAuthStateChanged(async (user) => {
     startLoading();
     if (user) {
-        const userDoc = await getDoc(doc(db, `users/${user.uid}`));
-        await getTransactions();
-        isLoggedIn.value = userDoc.exists(); // Update the value based on whether the user document exists
-        username.value = await getUserData('name');
-        if (await getUserData('partnerUid')) {
-            isPartnered.value = true;
-            partnerUsername.value = await getUserData('name', await getUserData('partnerUid'));
+        try {
+            const userDoc = await getDoc(doc(db, `users/${user.uid}`));
+            if (userDoc.exists()) {
+                // Update user data and authentication status
+                userData.value = userDoc.data();
+                if (userData.value.partnerUid) {
+                    const partnerDoc = await getDoc(doc(db, `users/${userData.value.partnerUid}`));
+                    partnerUserData.value = partnerDoc.data();
+                }
+                isLoggedIn.value = true;
+                await getTransactions();
+            }
+        } catch(error) {
+            console.error("Error fetching user data: ", error);
         }
     } else {
         isLoggedIn.value = false;
@@ -44,42 +39,89 @@ auth.onAuthStateChanged(async (user) => {
     stopLoading();
 });
 
-export async function login(email, password) {
-    await signInWithEmailAndPassword(auth, email, password)
-    return true;
-}
-
-export async function logout() {
-    await signOut(auth);
-    console.log("SIGNED OUT!");
-}
-
-// get user uid
-
-// get user data
-export async function getUserData(dataLabel, uid = auth.currentUser.uid) {
-    if (dataLabel === 'uid') {
-        return uid;
-    }
-    if (!uid) { console.log("No UID provided."); }
+/**
+ * Sign up new user.
+ * @param {string} name - User's display name
+ * @param {string} email - User's mail address
+ * @param {string} password - User's password
+ * @returns {boolean} - True if sign up was successful, false otherwise
+ */
+export async function signup(name, email, password) {
     try {
-        // Get the document corresponding to the specified user
-        const userDoc = await getDoc(doc(db, `users/${uid}`));
-
-        // Ensure the document exists
-        if (!userDoc.exists()) { throw new Error("User document does not exist"); }
-
-        // Extract the data from the document
-        const userData = userDoc.data();
-        if (!Object.prototype.hasOwnProperty.call(userData, dataLabel)) { console.log(`Data label '${dataLabel}' does not exist in the user data.`); }
-
-        return userData[dataLabel];
+        // Create user with email and password
+        await createUserWithEmailAndPassword(auth, email, password);
+        // Update user profile with display name
+        await updateProfile(auth.currentUser, {
+            displayName: name
+        });
+        // Create user document in Firestore
+        await createUserDocument(email, auth.currentUser.displayName);
+        isLoggedIn.value = true;
+        return true;
     } catch (error) {
-        console.log("Error fetching user data:", error);
+        console.error("Error signing up user: ", error);
+        throw error;
     }
 }
 
-// create user document
+/**
+ * Log in an existing user.
+ * @param {*} email - User's email address
+ * @param {*} password - User's password
+ * @returns - Returns true if login was successful, false otherwise
+ */
+export async function login(email, password) {
+    try {
+        // Sign in user with email and password
+        await signInWithEmailAndPassword(auth, email, password)
+        return true;
+    } catch (error) {
+        console.error("Error logging in user: ", error);
+        throw error;
+    }
+}
+
+/**
+ * Log out the current user.
+ */
+export async function logout() {
+    try {
+        await signOut(auth);
+    } catch (error) {
+        console.error("Error logging out user: ", error);
+        throw error;
+    }
+    
+}
+
+/**
+ * Get user data for specified user.
+ * @param {string} dataLabel - Label of the data to retrive.
+ * @param {long?} uid - UID of the user to get data for. If not provided, the current user's data is used.
+ * @returns {*} - The requested user data.
+ */
+export function getUserData(dataLabel, uid = auth.currentUser.uid) {
+    if (dataLabel === 'uid') {
+        if (uid === auth.currentUser.uid) { return auth.currentUser.uid; }
+    }
+
+    let dataDoc;
+    if (uid === auth.currentUser.uid) { dataDoc = userData; }
+    else { dataDoc = partnerUserData; }
+
+    if (!dataDoc.value) { return null; } // User data not available yet
+    if (!Object.prototype.hasOwnProperty.call(dataDoc.value, dataLabel)) { 
+        console.error(`Data label '${dataLabel}' does not exist in the user data.`);
+        return null;
+    }
+    return dataDoc.value[dataLabel];
+}
+
+/**
+ * Create a user document in Firestore
+ * @param {string} email - User's email address 
+ * @param {string} name - User's display name
+ */
 async function createUserDocument(email, name) {
     try {
         // Create a new document in the 'users' collection with the current user's UID
