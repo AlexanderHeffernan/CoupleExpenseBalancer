@@ -1,22 +1,22 @@
 <script setup>
 import { ref } from 'vue';
 import PageHeader from '../components/PageHeader.vue';
-import { username, partnerUsername, getUserData } from '../utils/userAccount.js';
+import { getUserData } from '../utils/userAccount.js';
 import { changePage } from '../utils/navigation.js';
 import { addTransaction } from '../utils/transactions.js';
 
-const users = ref([username.value, partnerUsername.value]);
+const users = ref([getUserData('name'), getUserData('name', getUserData('partnerUid'))]);
 
-async function getIDFromNickName(nickname) {
+function getIDFromNickName(nickname) {
   if (users.value[0] === nickname) {
-    return await getUserData('uid');
+    return getUserData('uid');
   } else {
-    return await getUserData('partnerUid');
+    return getUserData('partnerUid');
   }
 }
 
 const description = ref('');
-const user_name = ref(username.value);
+const user_name = ref(getUserData('name'));
 const amount = ref();
 
 const handleAddTransaction = async () => {
