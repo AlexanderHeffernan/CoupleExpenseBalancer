@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { db, auth } from '../firebase/init.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
 import { getDoc, setDoc, doc } from 'firebase/firestore';
-import { getTransactions } from './transactions.js';
+import { getTransactions, listenForTransactions } from './transactions.js';
 import { startLoading, stopLoading } from './navigation.js';
 
 // Global variables
@@ -29,6 +29,7 @@ auth.onAuthStateChanged(async (user) => {
                 }
                 isLoggedIn.value = true;
                 await getTransactions();
+                listenForTransactions();
             }
         } catch(error) {
             console.error("Error fetching user data: ", error);

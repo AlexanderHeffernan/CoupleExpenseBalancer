@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { db, auth } from '../firebase/init.js';
-import { collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { getDoc, doc } from 'firebase/firestore';
 import { getUserData } from './userAccount.js';
 
@@ -126,12 +126,31 @@ export async function getTransactions() {
     if (await getUserData('partnerUid')) {
         // Get all document from the partner's 'transactions' collection
         const partnerQuerySnapshot = await getDocs(collection(db, `users/${userData.partnerUid}/transactions`));
+
+        // Convert timestamps to JavaScript Date objects
+        const partnersTransactionsData = partnerQuerySnapshot.docs.map(doc => {
+            const data = doc.data();
+            // Convert timestamps to Date objects
+            data.date = data.date.toDate(); // Assuming 'date' is the field containing the timestamp
+            return data;
+        });
+        
         // Map each document to its data and assign it to the transactions ref
-        transactions.value = transactions.value.concat(partnerQuerySnapshot.docs.map(doc => doc.data()));
+        transactions.value = transactions.value.concat(partnersTransactionsData);
         balanceData.value = await getBalanceData();
         u1deficit.value = balanceData.value.u1deficit;
         u2deficit.value = balanceData.value.u2deficit;
     }
+}
+
+export async function listenForTransactions() {
+    const transactionsRef = collection(db, `users/${getUserData('partnerUid')}/transactions`);
+
+    return onSnapshot(transactionsRef, (snapshot) => {
+        if (snapshot.docChanges().length > 0) {
+            getTransactions();
+        }
+    });
 }
 
 async function resetTransactions() {
