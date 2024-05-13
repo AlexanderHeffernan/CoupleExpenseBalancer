@@ -9,7 +9,7 @@ import { getUserData } from '../utils/userData.js';
 </script>
 
 <template>
-    <div class="w-full h-full flex flex-col items-center">
+    <div class="w-full h-full flex flex-col items-center overflow-hidden">
       <PageHeader pageHeading="Home" />
       <br />
       <BalanceGradient v-if="getUserData('partnerUid')" />
