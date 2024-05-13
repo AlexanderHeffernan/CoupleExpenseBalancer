@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 // Import relevant utilities
 import { transactions } from '../utils/transactions.js';
-import { getUserData } from '../utils/userAccount.js';
+import { getUserData } from '../utils/userData.js';
 
 /**
  * Function to convert date to a readable format (dd/mm/yyyy)
@@ -16,15 +16,15 @@ function convertDate(date) {
 
 const originalUserId = ref('');
 const secondaryUserId = ref('');
-(async () => {
-    if (await getUserData('original')) {
-        originalUserId.value = await getUserData('uid');
-        secondaryUserId.value = await getUserData('partnerUid');
-    } else {
-        originalUserId.value = await getUserData('partnerUid');
-        secondaryUserId.value = await getUserData('uid');
-    }
-})();
+
+
+if (getUserData('original')) {
+    originalUserId.value = getUserData('uid');
+    secondaryUserId.value = getUserData('partnerUid');
+} else {
+    originalUserId.value = getUserData('partnerUid');
+    secondaryUserId.value = getUserData('uid');
+}
 </script>
 
 <template>

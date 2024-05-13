@@ -9,7 +9,7 @@ import AccountPage from './pages/AccountPage.vue';
 import NavBar from './components/NavBar.vue';
 import LoadingScreen from './components/LoadingScreen.vue';
 // Import utilities
-import { isLoggedIn } from './utils/userAccount.js';
+import { isLoggedIn } from './utils/userAuth.js';
 import { currentPage } from './utils/navigation.js';
 </script>
 

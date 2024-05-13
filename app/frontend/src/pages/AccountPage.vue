@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { partnerAccounts } from '../utils/partneringAccounts.js';
-import { logout } from '../utils/userAccount.js';
+import { logout } from '../utils/userAuth.js';
 import { isAccountPageOpen, toggleAccountPage } from '../utils/navigation.js';
 
 // Handle partner account settings

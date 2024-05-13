@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import PageHeader from '../components/PageHeader.vue';
-import { getUserData } from '../utils/userAccount.js';
+import { getUserData } from '../utils/userData.js';
 import { changePage } from '../utils/navigation.js';
 import { addTransaction } from '../utils/transactions.js';
 

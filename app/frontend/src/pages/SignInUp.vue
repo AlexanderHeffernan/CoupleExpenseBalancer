@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { login, signup } from '../utils/userAccount.js';
+import { signup, login } from '../utils/userAuth.js';
 
 const signUpName = ref(''), signUpEmail = ref(''), signUpPassword = ref('');
 const signInEmail = ref(''), signInPassword = ref('');

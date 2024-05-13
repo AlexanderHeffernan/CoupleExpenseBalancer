@@ -4,7 +4,7 @@ import PageHeader from '../components/PageHeader.vue';
 import BalanceGradient from '../components/BalanceGradient.vue';
 import ExpenseLog from '../components/ExpenseLog.vue';
 // Import utilities
-import { getUserData } from '../utils/userAccount.js';
+import { getUserData } from '../utils/userData.js';
 
 </script>
 

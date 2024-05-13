@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { db, auth } from '../firebase/init.js';
 import { collection, addDoc, getDocs, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { getDoc, doc } from 'firebase/firestore';
-import { getUserData } from './userAccount.js';
+import { getUserData } from './userData.js';
 
 // Define a reactive reference to store the transactions
 export const transactions = ref([]);
@@ -15,21 +15,21 @@ export const u2deficit = ref(0);
  * @param {number} user_id - The ID of the user
  * @returns {number} - The deficit amount of the user
  */
-export async function getUserDeficit(user_id) {
+export function getUserDeficit(user_id) {
     let userUid;
     if (user_id == 1) {
-        if (await getUserData('original') === true) {
-            userUid = await getUserData('uid');
+        if (getUserData('original') === true) {
+            userUid = getUserData('uid');
         }
         else {
-            userUid = await getUserData('partnerUid');
+            userUid = getUserData('partnerUid');
         }
     } else if (user_id == 2) {
-        if (await getUserData('original') === true) {
-            userUid = await getUserData('partnerUid');
+        if (getUserData('original') === true) {
+            userUid = getUserData('partnerUid');
         }
         else {
-            userUid = await getUserData('uid');
+            userUid = getUserData('uid');
         }
     }
 
@@ -51,9 +51,9 @@ export async function getUserDeficit(user_id) {
  *                       the user_id of the user who has to pay; and
  *                       the amount to balance the situation.
  */
-export async function getBalanceData() {
+export function getBalanceData() {
     // Calculate both users deficits
-    const u1deficit = await getUserDeficit(1), u2deficit = await getUserDeficit(2);
+    const u1deficit = getUserDeficit(1), u2deficit = getUserDeficit(2);
     const difference = Math.abs(u1deficit - u2deficit);
     // Determine the user with higher deficit and return half of the difference as the amount to balance
     return u1deficit === u2deficit
@@ -65,12 +65,12 @@ export async function getBalanceData() {
  * Add a new transaction to the list of transactions.
  * @param {Object} transactionData - Data of the transaction to be added
  */
-export async function addTransaction(transactionData) {
+export function addTransaction(transactionData) {
     // Push the transaction with a unique id
     transactions.value.push({ id: transactions.value.length + 1, date: new Date(), ...transactionData});
 
     saveTransaction(transactions.value[transactions.value.length - 1]);
-    balanceData.value = await getBalanceData();
+    balanceData.value = getBalanceData();
     u1deficit.value = balanceData.value.u1deficit;
     u2deficit.value = balanceData.value.u2deficit;
 }
@@ -123,7 +123,7 @@ export async function getTransactions() {
     transactions.value = transactionsData;
 
     // Check if partnerUid exists
-    if (await getUserData('partnerUid')) {
+    if (getUserData('partnerUid')) {
         // Get all document from the partner's 'transactions' collection
         const partnerQuerySnapshot = await getDocs(collection(db, `users/${userData.partnerUid}/transactions`));
 
@@ -137,7 +137,7 @@ export async function getTransactions() {
         
         // Map each document to its data and assign it to the transactions ref
         transactions.value = transactions.value.concat(partnersTransactionsData);
-        balanceData.value = await getBalanceData();
+        balanceData.value = getBalanceData();
         u1deficit.value = balanceData.value.u1deficit;
         u2deficit.value = balanceData.value.u2deficit;
     }
