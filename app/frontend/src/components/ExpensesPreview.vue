@@ -54,7 +54,7 @@ watchEffect(() => {
     <div class="shadow-2xl bg-widget w-[100%] h-[400px] mt-auto p-5 rounded-2xl flex flex-col self-end">
         <div class="flex items-center">
             <h2 class="text-text text-xl font-bold mb-3 flex-grow">Expenses</h2>
-            <button @click="changePage('add')" class="bg-primary flex justify-center p-2 rounded-3xl"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="fill-text" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg></button>
+            <button @click="changePage('add')" class="bg-primary flex justify-center p-3 rounded-3xl"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="fill-text" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg></button>
         </div>
         <div class="flex items-center mb-5">
             <div v-for="(filter, index) in timeFilters" :key="index" @click="timeFilter = filter" class="cursor-pointer mr-4 rounded-xl px-5 py-1 transition-colors duration-300" :class="{ 'bg-primary': timeFilter === filter }">
