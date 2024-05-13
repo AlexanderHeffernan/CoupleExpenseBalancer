@@ -2,7 +2,7 @@
 // Import componens
 import PageHeader from '../components/PageHeader.vue';
 import BalanceGradient from '../components/BalanceGradient.vue';
-import ExpenseLog from '../components/ExpenseLog.vue';
+import ExpensesPreview from '../components/ExpensesPreview.vue';
 // Import utilities
 import { getUserData } from '../utils/userData.js';
 
@@ -13,6 +13,6 @@ import { getUserData } from '../utils/userData.js';
       <PageHeader pageHeading="Home" />
       <br />
       <BalanceGradient v-if="getUserData('partnerUid')" />
-      <ExpenseLog />
+      <ExpensesPreview />
     </div>
 </template>
