@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { getDoc, setDoc, doc } from 'firebase/firestore';
 import { auth, db } from '../firebase/init.js';
 import { loadUserData } from './userData.js';
-import { stopLoading } from './navigation.js';
+import { stopLoading, changePage } from './navigation.js';
 
 export const isLoggedIn = ref(false)
 
@@ -50,9 +50,11 @@ async function createUserDocument(userId, email, name) {
 auth.onAuthStateChanged(async (user) => {
     if (!user) {
         isLoggedIn.value = false;
+        changePage('login');
         stopLoading();
         return;
     }
     await loadUserData(user);
     isLoggedIn.value = true;
+    changePage('home');
 });

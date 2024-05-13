@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 
 export const isLoading = ref(true);
-export const currentPage = ref('home');
+export const currentPage = ref('');
 export const isAccountPageOpen = ref(false);
 
 export function startLoading() {
