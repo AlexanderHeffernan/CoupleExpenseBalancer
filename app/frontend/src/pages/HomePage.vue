@@ -9,9 +9,9 @@ import { getUserData } from '../utils/userData.js';
 </script>
 
 <template>
-    <div class="w-full h-full flex flex-col items-center overflow-hidden">
+    <div class="relative w-full h-full flex flex-col items-center overflow-hidden touch-none">
       <PageHeader pageHeading="Home" />
-      <br />
+      <br /><br />
       <BalanceGradient v-if="getUserData('partnerUid')" />
       <ExpensesPreview />
     </div>

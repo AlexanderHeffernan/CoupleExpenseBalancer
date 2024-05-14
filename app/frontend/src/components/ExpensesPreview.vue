@@ -51,17 +51,17 @@ watchEffect(() => {
 </script>
 
 <template>
-    <div class="shadow-2xl bg-widget w-[100%] max-h-[400px] min-h-[200px] flex-grow p-5 rounded-2xl flex flex-col self-end mt-auto">
-        <div class="flex items-center">
+    <div style="flex: 1;" class="shadow-2xl bg-widget w-[100%] max-h-[300px] p-5 rounded-2xl absolute bottom-0 left-0 right-0 h-full">
+        <div class="flex items-center h-[48px]">
             <h2 class="text-text text-xl font-bold mb-3 flex-grow">Expenses</h2>
             <button @click="changePage('add')" class="bg-primary flex justify-center p-3 rounded-3xl"><svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path class="fill-text" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg></button>
         </div>
-        <div class="flex items-center mb-5">
+        <div class="flex items-center mb-5 h-[32px]">
             <div v-for="(filter, index) in timeFilters" :key="index" @click="timeFilter = filter" class="cursor-pointer mr-4 rounded-xl px-5 py-1 transition-colors duration-300" :class="{ 'bg-primary': timeFilter === filter }">
                 <p class="font-bold">{{ filter }}</p>
             </div>
         </div>
-        <div class="overflow-y-auto flex-grow h-[192px] pr-4">
+        <div class="h-[calc(100%-80px)] overflow-y-auto pr-4">
             <div v-for="transaction in filteredTransactions" :key="transaction.id">
                 <div class="rounded-xl p-2 mb-2 flex items-center" :class="{ 'bg-primary': transaction.user_id === originalUserId, 'bg-secondary': transaction.user_id === secondaryUserId }">
                     <div class="mr-auto">
@@ -70,7 +70,7 @@ watchEffect(() => {
                     </div>
                     <p class="font-bold">${{ transaction.amount.toFixed(2) }}</p>
                 </div>
-            </div>
+            </div><br />
         </div>
     </div>
 </template>

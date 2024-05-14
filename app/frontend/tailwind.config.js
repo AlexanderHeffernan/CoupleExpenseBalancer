@@ -15,6 +15,9 @@ module.exports = {
         error: '#FF9999',
         success: '#98FB98',
       },
+      screens: {
+        standalone: { raw: "(display-mode: standalone)" },
+      },
     },
   },
   plugins: [],

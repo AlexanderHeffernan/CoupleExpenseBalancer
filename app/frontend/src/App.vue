@@ -15,13 +15,13 @@ import { currentPage } from './utils/navigation.js';
 </script>
 
 <template>
-    <div class="app w-screen h-screen bg-background overflow-y-hidden">
+    <div class="app w-screen h-screen bg-background overflow-y-hidden touch-none">
         <LoadingScreen />
         <div v-if="!isLoggedIn">
             <LogIn v-if="currentPage == 'login'"/>
             <SignUp v-if="currentPage == 'signup'"/>
         </div>
-        <div v-else class="w-full h-[calc(100%-64px)] overflow-y-auto">
+        <div v-else class="w-full h-[calc(100%-136px)] standalone:mt-[72px] touch-none overflow-hidden">
             <HomePage v-if="currentPage == 'home'" />
             <AddPage v-if="currentPage == 'add'" />
             <BalancePage v-if="currentPage == 'balance'" />
